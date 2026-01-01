@@ -3,7 +3,16 @@
 본 프로젝트는 ERD 및 세부 기능 정의 이전 단계에서  
 **백엔드 구조의 일관성과 확장성 확보**를 목표로 초기 설계를 진행.
 
-초기 단계에서는 다음 항목들을 우선적으로 정리하였다.
+* 주의사항
+
+1. 카카오 소셜 로그인의 경우 카카오 계정의 비밀번호는 당연히 카카오 인증 서버에서 해당 사용자의 PWD 줄 수 없으니 /global/oauth/service/OauthUserService 내 "kakao_oauth_placeholder" 문자열로 비밀번호 하드코딩하여 인코딩해서 DB에 넣었음.
+2. 배포가 안되있어 로컬 DB로 application.yml 설정하였으니 각자 'givy' 이름의 DB 생성
+3. .env 파일에 ${DB_USER}, ${DB_PWD}, ${JWT_SECRET}, ${JWT_EXPIRATION_MS} 설정 후 터미널에서 실행
+4. ./gradlew clean build 시 test 코드 생성 안해서 실패할 것임. -> ./gradlew clean build -x test -> ./gradlew bootRun으로 실행
+5. application.yml 내 oauth.kakao에 관련하여 client-secret은 절대 유출 x (카카오 개발자 사이트에서 카카오 소셜 로그인 RestAPI 문서 보시면 됩니다.)
+6. 제가 사용한 JWT_SECRET, CLIENT_SECRET은 보내드리겠습니다.
+
+---
 
 ### 1. Global 디렉토리 구조 설계 (ERD 이전 단계)
 
@@ -73,3 +82,4 @@ docs: update project initial design
 - 작업 의도가 드러나도록 명확하게 작성
 
 ---
+
