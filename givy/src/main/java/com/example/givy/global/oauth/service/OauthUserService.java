@@ -1,0 +1,48 @@
+package com.example.givy.global.oauth.service;
+/*
+“카카오 사용자 정보를 우리 DB User와 매핑하고 JWT 발급” 책임
+소셜 종류(KAKAO, GOOGLE, NAVER 등)가 늘어나도
+이 서비스는 공통 “소셜 사용자 처리” 로 사용할 수 있음.
+ */
+
+import com.example.givy.domain.user.entity.User;
+import com.example.givy.domain.user.enums.Role;
+import com.example.givy.domain.user.repository.UserRepository;
+import com.example.givy.global.oauth.model.KakaoUserInfo;
+import com.example.givy.global.security.JwtTokenProvider;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class OauthUserService {
+
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
+
+    public String handleKakaoUser(KakaoUserInfo info){
+
+        // 이메일 기준으로 유저 조회
+        User user = userRepository.findByEmail(info.getEmail())
+                .orElseGet(() -> createKakaoUser(info));
+
+        // JWT 발급
+        return jwtTokenProvider.createToken(user.getId(), user.getRole());
+    }
+
+    private User createKakaoUser(KakaoUserInfo info){
+
+        String encodedPassword = passwordEncoder.encode("kakao_oauth_placeholder");
+
+        User user = User.builder()
+                .email(info.getEmail())
+                .password(encodedPassword)
+                .name(info.getNickname())
+                .role(Role.USER)
+                .build();
+
+        return userRepository.save(user);
+    }
+}
