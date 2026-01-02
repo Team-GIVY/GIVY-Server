@@ -30,14 +30,15 @@
 
 - 도메인 단위로 패키지를 분리하여 관심사 분리
 - 각 도메인은 다음과 같은 계층 구조를 기본으로 가진다.
+  - code
   - controller
-  - service
-  - repository
-  - entity
+  - converter
   - dto
-  - exception
+  - entity
   - enums
-
+  - exception
+  - repository
+  - service
 ### 4. API 응답 구조 통일
 
 - 클라이언트와의 명확한 통신을 위해 API 응답 형식을 통일
