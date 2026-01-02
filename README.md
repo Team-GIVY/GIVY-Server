@@ -70,11 +70,11 @@
 ### 커밋 메시지 형식
 
 #### 예시
-init: add README
-feat: implement user signup API
-fix: resolve login validation bug
-refactor: reorganize user domain packages
-docs: update project initial design
+- init: add README
+- feat: implement user signup API
+- fix: resolve login validation bug
+- refactor: reorganize user domain packages
+- docs: update project initial design
 
 
 - 한 커밋에는 **하나의 목적만 포함**
