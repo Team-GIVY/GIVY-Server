@@ -13,7 +13,7 @@ public class UserResDTO {
     public static class UserInfoDTO{
 
         @NotNull
-        private Long id;
+        private Long userId;
 
         @NotNull
         private String username;
@@ -28,7 +28,7 @@ public class UserResDTO {
     public static class UserDetailDTO{
 
         @NotNull
-        private Long id;
+        private Long userId;
 
         @NotNull
         private String username;

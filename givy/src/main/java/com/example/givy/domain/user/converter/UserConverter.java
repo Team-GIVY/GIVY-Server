@@ -21,7 +21,7 @@ public class UserConverter {
     //entity -> userInfoDto
     public static UserResDTO.UserInfoDTO toDTO(User user) {
         return UserResDTO.UserInfoDTO.builder()
-                .id(user.getId())
+                .userId(user.getUserId())
                 .email(user.getEmail())
                 .username(user.getName())
                 .build();
@@ -37,7 +37,7 @@ public class UserConverter {
 
     public static UserResDTO.UserDetailDTO toDetailDTO(User user) {
         return UserResDTO.UserDetailDTO.builder()
-                .id(user.getId())
+                .userId(user.getUserId())
                 .email(user.getEmail())
                 .username(user.getName())
                 .role(user.getRole())
