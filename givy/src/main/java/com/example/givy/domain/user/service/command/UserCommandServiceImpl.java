@@ -49,7 +49,7 @@ public class UserCommandServiceImpl implements UserCommandService {
             throw new UserException(UserErrorCode.USER_INVALID_PASSWORD);
         }
 
-        String token = jwtTokenProvider.createToken(user.getId(), user.getRole());
+        String token = jwtTokenProvider.createToken(user.getUserId(), user.getRole());
 
         return UserConverter.toLoginDTO(token, user);
     }

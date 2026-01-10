@@ -29,7 +29,7 @@ public class OauthUserService {
                 .orElseGet(() -> createKakaoUser(info));
 
         // JWT 발급
-        return jwtTokenProvider.createToken(user.getId(), user.getRole());
+        return jwtTokenProvider.createToken(user.getUserId(), user.getRole());
     }
 
     private User createKakaoUser(KakaoUserInfo info){
