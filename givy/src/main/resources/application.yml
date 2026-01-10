@@ -1,23 +1,13 @@
 spring:
   application:
     name: givy
-
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/givy?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-    username: ${DB_USER}
-    password: ${DB_PWD}
-
+  profiles:
+    active: local # 아무 설정 없이 실행하면 기본적으로 local 프로파일 사용
   jpa:
-    hibernate:
-      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
         format_sql: true
-  jwt:
-    secret: ${JWT_SECRET}
-    expiration-ms: ${JWT_EXPIRATION_MS}
 
 springdoc:
   swagger-ui:
@@ -27,7 +17,6 @@ springdoc:
 oauth:
   kakao:
     client-id: 0283c27599aef19ed65bcde74a5cb98b
-    client-secret: ${CLIENT_SECRET}
     authorize-uri: https://kauth.kakao.com/oauth/authorize
     redirect-uri: http://localhost:8080/oauth/kakao/callback
     token-uri: https://kauth.kakao.com/oauth/token
