@@ -1,6 +1,8 @@
 package com.example.givy.domain.challenge.entity;
 
 import com.example.givy.domain.challenge.enums.Status;
+import com.example.givy.domain.commerce.entity.Product;
+import com.example.givy.domain.user.entity.Users;
 import com.example.givy.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -19,4 +21,17 @@ public class StartChallenge extends BaseEntity {
 
     @Column(name="status")
     private Status status;
+
+    //mapping
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private Users user;
+
+    @ManyToOne
+    @JoinColumn(name="stamp_id")
+    private Stamp stamp;
+
+    @ManyToOne
+    @JoinColumn(name="product_id")
+    private Product product;
 }

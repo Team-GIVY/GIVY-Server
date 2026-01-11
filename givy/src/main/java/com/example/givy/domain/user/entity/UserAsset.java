@@ -1,5 +1,6 @@
 package com.example.givy.domain.user.entity;
 
+import com.example.givy.domain.commerce.entity.Product;
 import com.example.givy.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -10,7 +11,7 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name="user_asset")
-public class Asset extends BaseEntity {
+public class UserAsset extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="user_asset_id")
@@ -21,4 +22,13 @@ public class Asset extends BaseEntity {
 
     @Column(name="average_price")
     private Double averagePrice;
+
+    //mapping
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private Users user;
+
+    @ManyToOne
+    @JoinColumn(name="product_id")
+    private Product product;
 }

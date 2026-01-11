@@ -1,28 +1,32 @@
 package com.example.givy.domain.guide.entity;
 
+import com.example.givy.domain.user.entity.Users;
+import com.example.givy.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EntityListeners(AuditingEntityListener.class)
 @Table(name="guide_store")
-public class GuideStore {
+public class GuideStore extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="guide_store_id")
     private Long guideStoreId;
 
-    @Column(name="created_at", nullable = false)
-    @CreatedDate
-    private LocalDateTime createdAt;
+    @Column(name="is_deleted", nullable = false)
+    @Builder.Default
+    private Boolean isDeleted = false;
 
-    //GuideLike와 마찬가지로 isDeleted
+    //mapping
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private Users user;
+
+    @ManyToOne
+    @JoinColumn(name="guide_id")
+    private Guide guide;
 }

@@ -1,5 +1,8 @@
 package com.example.givy.domain.user.entity;
 
+import com.example.givy.domain.guide.entity.GuideLike;
+import com.example.givy.domain.guide.entity.GuideStore;
+import com.example.givy.domain.recommendation.entity.Tendency;
 import com.example.givy.domain.user.enums.Language;
 import com.example.givy.domain.user.enums.Role;
 import com.example.givy.domain.user.enums.SocialType;
@@ -10,6 +13,8 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -17,7 +22,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Table(name = "users")  //예약어 충돌 방지를 위한 테이블명 수정 user->users
-public class User extends BaseEntity {
+public class Users extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
@@ -71,4 +76,26 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false, length = 20)
     private Role role;
+
+    //mapping
+    @OneToMany(mappedBy = "users")
+    private List<UserAsset> assets = new ArrayList<>();
+    
+    @OneToMany(mappedBy = "users")
+    private List<Tendency> tendency = new ArrayList<>();
+
+    @OneToMany(mappedBy="users")
+    private List<UserNotification> userNotification = new ArrayList<>();
+
+    @OneToMany(mappedBy="users")
+    private List<UserStamp> userStamp = new ArrayList<>();
+
+    @OneToMany(mappedBy="users")
+    private List<BuyHistory> buyHistory = new ArrayList<>();
+
+    @OneToMany(mappedBy="users")
+    private List<GuideLike> guideLike = new ArrayList<>();
+
+    @OneToMany(mappedBy="users")
+    private List<GuideStore> guideStore = new ArrayList<>();
 }
