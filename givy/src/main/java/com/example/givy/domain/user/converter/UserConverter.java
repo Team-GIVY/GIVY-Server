@@ -2,14 +2,14 @@ package com.example.givy.domain.user.converter;
 
 import com.example.givy.domain.user.dto.req.UserReqDTO;
 import com.example.givy.domain.user.dto.res.UserResDTO;
-import com.example.givy.domain.user.entity.User;
+import com.example.givy.domain.user.entity.Users;
 import com.example.givy.domain.user.enums.Role;
 
 public class UserConverter {
 
     //dto -> entity
-    public static User toEntity(UserReqDTO.UserSignupDTO dto, String encodedPw) {
-        return User.builder()
+    public static Users toEntity(UserReqDTO.UserSignupDTO dto, String encodedPw) {
+        return Users.builder()
                 .email(dto.getEmail())
                 .password(encodedPw)
                 .name(dto.getUsername())
@@ -19,7 +19,7 @@ public class UserConverter {
 
 
     //entity -> userInfoDto
-    public static UserResDTO.UserInfoDTO toDTO(User user) {
+    public static UserResDTO.UserInfoDTO toDTO(Users user) {
         return UserResDTO.UserInfoDTO.builder()
                 .userId(user.getUserId())
                 .email(user.getEmail())
@@ -28,14 +28,14 @@ public class UserConverter {
     }
 
     // 로그인 응답 DTO (token + userInfo)
-    public static UserResDTO.UserLoginResDTO toLoginDTO(String token, User user) {
+    public static UserResDTO.UserLoginResDTO toLoginDTO(String token, Users user) {
         return UserResDTO.UserLoginResDTO.builder()
                 .token(token)
                 .user(toDTO(user))
                 .build();
     }
 
-    public static UserResDTO.UserDetailDTO toDetailDTO(User user) {
+    public static UserResDTO.UserDetailDTO toDetailDTO(Users user) {
         return UserResDTO.UserDetailDTO.builder()
                 .userId(user.getUserId())
                 .email(user.getEmail())

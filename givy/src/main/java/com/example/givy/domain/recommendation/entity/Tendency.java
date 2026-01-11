@@ -1,8 +1,12 @@
 package com.example.givy.domain.recommendation.entity;
 
+import com.example.givy.domain.user.entity.Users;
 import com.example.givy.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -51,6 +55,14 @@ public class Tendency extends BaseEntity {
 
     @Column(name="image_question_url", nullable = false)
     private String imageQuestionUrl;
+
+    //mapping
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private Users user;
+
+    @OneToMany(mappedBy="tendency")
+    private List<RecommendationEvent> recommendationEvent = new ArrayList<>();
 
 }
 

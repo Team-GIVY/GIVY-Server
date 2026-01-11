@@ -1,6 +1,6 @@
-package com.example.givy.domain.recommendation.entity;
+package com.example.givy.domain.user.entity;
 
-import com.example.givy.domain.commerce.entity.Product;
+import com.example.givy.domain.notification.entity.Notification;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -14,12 +14,19 @@ import java.time.LocalDateTime;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
-@Table(name="recommendation_item")
-public class RecommendationItem {
+@Table(name="user_notification")
+public class UserNotification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="recommendation_item_id")
-    private Long recommendationItemId;
+    @Column(name="user_notification_id")
+    private Long userNotificationId;
+
+    @Column(name="is_read", nullable = false)
+    @Builder.Default
+    private Boolean isRead = false;
+
+    @Column(name="delivered_at", nullable = false)
+    private LocalDateTime deliveredAt;
 
     @Column(name="created_at", nullable = false)
     @CreatedDate
@@ -27,10 +34,10 @@ public class RecommendationItem {
 
     //mapping
     @ManyToOne
-    @JoinColumn(name="recommendation_event_id")
-    private RecommendationEvent recommendationEvent;
+    @JoinColumn(name="notification_id")
+    private Notification notification;
 
     @ManyToOne
-    @JoinColumn(name="product_id")
-    private Product product;
+    @JoinColumn(name="user_id")
+    private Users user;
 }

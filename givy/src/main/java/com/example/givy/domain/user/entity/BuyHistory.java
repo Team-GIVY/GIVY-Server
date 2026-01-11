@@ -1,5 +1,6 @@
-package com.example.givy.domain.commerce.entity;
+package com.example.givy.domain.user.entity;
 
+import com.example.givy.domain.commerce.entity.Product;
 import com.example.givy.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -21,4 +22,13 @@ public class BuyHistory extends BaseEntity {
 
     @Column(name="quantity", nullable = false)
     private Long quantity;
+
+    //mapping
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private Users user;
+
+    @ManyToOne
+    @JoinColumn(name="product_id")
+    private Product product;
 }

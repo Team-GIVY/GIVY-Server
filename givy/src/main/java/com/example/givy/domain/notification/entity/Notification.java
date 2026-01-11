@@ -1,6 +1,6 @@
-package com.example.givy.domain.user.entity;
+package com.example.givy.domain.notification.entity;
 
-import com.example.givy.domain.user.enums.TargetType;
+import com.example.givy.domain.notification.enums.NotificationType;
 import com.example.givy.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -17,21 +17,19 @@ public class Notification extends BaseEntity {
     @Column(name = "notification_id")
     private Long notificationId;
 
+    @Enumerated
+    @Column(name = "notification_type", nullable = false)
+    private NotificationType notificationType;
+
     @Column(name = "title", nullable = false)
     private String title;
 
     @Column(name = "body", nullable = false)
     private String body;
 
-    //default 값 넣는 게 좋지 않을까 생각합니다
-    @Column(name = "is_confirmed", nullable = false)
-    private Boolean isConfirmed;
+    @Column(name="target_type", nullable = false)
+    private String targetType;
 
-    @Enumerated
-    @Column(name = "target_type", nullable = false)
-    private TargetType targetType;
-
-    //이동할 경로 ID
-    @Column(name = "target_id")
+    @Column(name="target_id")
     private Long targetId;
 }

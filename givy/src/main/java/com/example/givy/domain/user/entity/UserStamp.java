@@ -1,5 +1,6 @@
 package com.example.givy.domain.user.entity;
 
+import com.example.givy.domain.challenge.entity.Stamp;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -23,4 +24,13 @@ public class UserStamp {
     @Column(name="created_at", nullable = false)
     @CreatedDate
     private LocalDateTime createdAt;
+
+    //mapping
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private Users user;
+
+    @ManyToOne
+    @JoinColumn(name="stamp_id")
+    private Stamp stamp;
 }

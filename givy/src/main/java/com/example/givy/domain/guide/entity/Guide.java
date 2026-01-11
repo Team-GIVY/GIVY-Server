@@ -4,6 +4,9 @@ import com.example.givy.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Builder
@@ -36,4 +39,11 @@ public class Guide extends BaseEntity {
     //카테고리 태그(ex. 주식초보, 절약팁)
     @Column(name = "category")
     private String category;
+
+    //mapping
+    @OneToMany(mappedBy="guide")
+    private List<GuideLike> guideLike = new ArrayList<>();
+
+    @OneToMany(mappedBy="guide")
+    private List<GuideStore> guideStore =new ArrayList<>();
 }
