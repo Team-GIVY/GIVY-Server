@@ -5,7 +5,7 @@ package com.example.givy.global.oauth.service;
 이 서비스는 공통 “소셜 사용자 처리” 로 사용할 수 있음.
  */
 
-import com.example.givy.domain.user.entity.User;
+import com.example.givy.domain.user.entity.Users;
 import com.example.givy.domain.user.enums.Role;
 import com.example.givy.domain.user.repository.UserRepository;
 import com.example.givy.global.oauth.model.KakaoUserInfo;
@@ -25,18 +25,18 @@ public class OauthUserService {
     public String handleKakaoUser(KakaoUserInfo info){
 
         // 이메일 기준으로 유저 조회
-        User user = userRepository.findByEmail(info.getEmail())
+        Users user = userRepository.findByEmail(info.getEmail())
                 .orElseGet(() -> createKakaoUser(info));
 
         // JWT 발급
-        return jwtTokenProvider.createToken(user.getId(), user.getRole());
+        return jwtTokenProvider.createToken(user.getUserId(), user.getRole());
     }
 
-    private User createKakaoUser(KakaoUserInfo info){
+    private Users createKakaoUser(KakaoUserInfo info){
 
         String encodedPassword = passwordEncoder.encode("kakao_oauth_placeholder");
 
-        User user = User.builder()
+        Users user = Users.builder()
                 .email(info.getEmail())
                 .password(encodedPassword)
                 .name(info.getNickname())

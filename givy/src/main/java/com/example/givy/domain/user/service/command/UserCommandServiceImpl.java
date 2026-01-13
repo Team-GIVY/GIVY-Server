@@ -4,7 +4,7 @@ import com.example.givy.domain.user.code.UserErrorCode;
 import com.example.givy.domain.user.converter.UserConverter;
 import com.example.givy.domain.user.dto.req.UserReqDTO;
 import com.example.givy.domain.user.dto.res.UserResDTO;
-import com.example.givy.domain.user.entity.User;
+import com.example.givy.domain.user.entity.Users;
 import com.example.givy.domain.user.exception.UserException;
 import com.example.givy.domain.user.repository.UserRepository;
 import com.example.givy.global.security.JwtTokenProvider;
@@ -31,9 +31,9 @@ public class UserCommandServiceImpl implements UserCommandService {
 
         String encodedPassword = passwordEncoder.encode(request.getPassword());
 
-        User user = UserConverter.toEntity(request, encodedPassword);
+        Users user = UserConverter.toEntity(request, encodedPassword);
 
-        User savedUser = userRepository.save(user);
+        Users savedUser = userRepository.save(user);
 
         return UserConverter.toDTO(savedUser);
 
@@ -42,14 +42,14 @@ public class UserCommandServiceImpl implements UserCommandService {
     /* 01-02 로그인 API */
     @Override
     public UserResDTO.UserLoginResDTO login(UserReqDTO.UserLoginDTO request) {
-        User user = userRepository.findByEmail(request.getEmail()) //null일 수도 있는 값을 감싸는 래퍼 타입 - Optional
+        Users user = userRepository.findByEmail(request.getEmail()) //null일 수도 있는 값을 감싸는 래퍼 타입 - Optional
                 .orElseThrow(() -> new UserException(UserErrorCode.USER_EMAIL_NOT_FOUND));
 
         if(!passwordEncoder.matches(request.getPassword(), user.getPassword())){
             throw new UserException(UserErrorCode.USER_INVALID_PASSWORD);
         }
 
-        String token = jwtTokenProvider.createToken(user.getId(), user.getRole());
+        String token = jwtTokenProvider.createToken(user.getUserId(), user.getRole());
 
         return UserConverter.toLoginDTO(token, user);
     }
