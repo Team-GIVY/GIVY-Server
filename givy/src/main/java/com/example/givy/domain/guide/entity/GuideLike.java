@@ -24,7 +24,7 @@ public class GuideLike extends BaseEntity {
     //mapping
     @ManyToOne
     @JoinColumn(name="user_id")
-    private Users user;
+    private Users users;
 
     @ManyToOne
     @JoinColumn(name="guide_id")

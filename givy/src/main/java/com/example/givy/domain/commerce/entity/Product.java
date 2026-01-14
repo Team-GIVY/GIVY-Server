@@ -24,7 +24,7 @@ public class Product {
     @Column(name="description", nullable = false)
     private String description;
 
-    @Column(name="taline", nullable = false)
+    @Column(name="tagline", nullable = false)
     private String tagline;
 
     @Column(name="match_reason", nullable = false)

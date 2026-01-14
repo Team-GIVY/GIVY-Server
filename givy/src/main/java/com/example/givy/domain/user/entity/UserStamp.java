@@ -28,7 +28,7 @@ public class UserStamp {
     //mapping
     @ManyToOne
     @JoinColumn(name="user_id")
-    private Users user;
+    private Users users;
 
     @ManyToOne
     @JoinColumn(name="stamp_id")
