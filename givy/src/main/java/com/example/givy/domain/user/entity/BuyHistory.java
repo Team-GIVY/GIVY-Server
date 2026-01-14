@@ -26,7 +26,7 @@ public class BuyHistory extends BaseEntity {
     //mapping
     @ManyToOne
     @JoinColumn(name="user_id")
-    private Users user;
+    private Users users;
 
     @ManyToOne
     @JoinColumn(name="product_id")

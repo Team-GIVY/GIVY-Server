@@ -37,6 +37,6 @@ public class RecommendationEvent {
     @JoinColumn(name="tendency_id")
     private Tendency tendency;
 
-    @OneToMany(mappedBy="recommendation_event")
+    @OneToMany(mappedBy="recommendationEvent")
     private List<RecommendationItem> recommendationItem = new ArrayList<>();
 }
