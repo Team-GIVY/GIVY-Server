@@ -33,7 +33,7 @@
             String cleanSecret = appSecret.trim().replace("\"", "");
 
             if (cleanKey.startsWith("${") || cleanSecret.startsWith("${")) {
-                log.error("❌ KIS API Key가 설정되지 않았습니다. application.yml 또는 환경 변수를 확인해주세요.");
+                log.error("KIS API Key가 설정되지 않았습니다.");
                 return;
             }
 
@@ -57,7 +57,7 @@
                     .retrieve()
                     .onStatus(HttpStatusCode::isError, clientResponse ->
                             clientResponse.bodyToMono(String.class).doOnNext(body ->
-                                    log.error("❌ KIS 에러 상세 내용: {}", body)
+                                    log.error(" KIS 에러 상세 내용: {}", body)
                             ).then(Mono.error(new RuntimeException("KIS API 호출 실패")))
                     )
                     .bodyToMono(KisTokenResponse.class)
