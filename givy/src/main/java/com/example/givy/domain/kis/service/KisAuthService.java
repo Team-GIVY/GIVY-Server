@@ -57,7 +57,7 @@
                     .retrieve()
                     .onStatus(HttpStatusCode::isError, clientResponse ->
                             clientResponse.bodyToMono(String.class).doOnNext(body ->
-                                    log.error("❌ KIS 에러 상세 내용: {}", body)
+                                    log.error(" KIS 에러 상세 내용: {}", body)
                             ).then(Mono.error(new RuntimeException("KIS API 호출 실패")))
                     )
                     .bodyToMono(KisTokenResponse.class)
