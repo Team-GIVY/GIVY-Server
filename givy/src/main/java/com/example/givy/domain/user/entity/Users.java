@@ -3,6 +3,7 @@ package com.example.givy.domain.user.entity;
 import com.example.givy.domain.guide.entity.GuideLike;
 import com.example.givy.domain.guide.entity.GuideStore;
 import com.example.givy.domain.recommendation.entity.Tendency;
+import com.example.givy.domain.user.dto.req.UserReqDTO;
 import com.example.givy.domain.user.enums.Language;
 import com.example.givy.domain.user.enums.Role;
 import com.example.givy.domain.user.enums.SocialType;
@@ -76,7 +77,7 @@ public class Users extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false, length = 20)
     private Role role;
-
+    
     //mapping
     @OneToMany(mappedBy = "users")
     private List<UserAsset> assets = new ArrayList<>();
@@ -98,4 +99,13 @@ public class Users extends BaseEntity {
 
     @OneToMany(mappedBy="users")
     private List<GuideStore> guideStore = new ArrayList<>();
+
+    // 01-04번 API - 프로필 완성을 위한 메서드
+    public void completeSocialProfile(UserReqDTO.UserProfileDTO dto) {
+        this.name = dto.getName();
+        this.nickname = dto.getNickname();
+        this.language = dto.getLanguage();
+        this.profileImageUrl = dto.getProfileImageUrl();
+    }
+
 }

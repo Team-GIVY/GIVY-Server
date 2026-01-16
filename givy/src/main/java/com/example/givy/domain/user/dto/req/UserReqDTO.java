@@ -1,5 +1,6 @@
 package com.example.givy.domain.user.dto.req;
 
+import com.example.givy.domain.user.enums.Language;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
@@ -31,7 +32,32 @@ public class UserReqDTO {
         private String password;
 
         @NotNull
-        private String username;
+        private String name;
+
+        @NotNull
+        private String nickname;
+
+        @NotNull
+        private Language language;
 
     }
+
+    @Getter
+    @Builder
+    public static class UserProfileDTO{
+
+        @NotNull
+        private String name;
+
+        @NotNull
+        private String nickname;
+
+        @NotNull
+        private Language language;
+
+        @NotNull
+        private String profileImageUrl;
+
+    }
+
 }

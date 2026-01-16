@@ -17,7 +17,7 @@ public class UserQueryServiceImpl implements UserQueryService {
 
     private final UserRepository userRepository;
 
-    /* 01-03 내 정보 조회 API */
+    /* 01-05 내 정보 조회 API */
     @Override
     public UserResDTO.UserDetailDTO getUserInfo(Long userId) {
 

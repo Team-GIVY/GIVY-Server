@@ -55,4 +55,17 @@ public class UserCommandServiceImpl implements UserCommandService {
     }
 
 
+    /* 01-04 소셜 회원가입(프로필 완성 단계) */
+    @Override
+    public void socialSignup(Long userId, UserReqDTO.UserProfileDTO dto){
+        Users user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserException(UserErrorCode.USER_ID_NOT_FOUND));
+
+        //OauthUserService에서 카카오로 로그인한 유저 미리 하드코딩으로 NOTNULL 데이터들 넣어줬음. 다시 덮어씌우기.
+        //이미 생성된 entity를 userId기준으로 찾았음.
+        user.completeSocialProfile(dto);
+
+        // db 저장 끝.
+        userRepository.save(user);
+    }
 }

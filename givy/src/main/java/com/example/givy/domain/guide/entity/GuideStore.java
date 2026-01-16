@@ -29,4 +29,13 @@ public class GuideStore extends BaseEntity {
     @ManyToOne
     @JoinColumn(name="guide_id")
     private Guide guide;
+
+    public void delete() {
+        this.isDeleted = true;
+    }
+
+    public void restore() {
+        this.isDeleted = false;
+    }
+
 }
