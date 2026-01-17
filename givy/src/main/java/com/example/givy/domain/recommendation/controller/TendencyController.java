@@ -4,6 +4,7 @@ import com.example.givy.domain.recommendation.dto.req.TendencyReqDTO;
 import com.example.givy.domain.recommendation.dto.res.TendencyResDTO;
 import com.example.givy.domain.recommendation.exception.code.TendencySuccessCode;
 import com.example.givy.domain.recommendation.service.command.TendencyCommandService;
+import com.example.givy.domain.recommendation.service.query.TendencyQueryService;
 import com.example.givy.domain.user.code.UserErrorCode;
 import com.example.givy.domain.user.entity.Users;
 import com.example.givy.domain.user.exception.UserException;
@@ -13,10 +14,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TendencyController {
 
     private final TendencyCommandService tendencyCommandService;
+    private final TendencyQueryService tendencyQueryService;
 
     @PostMapping
     public ApiResponse<TendencyResDTO.TendencyResultDTO> submitTendency(@AuthenticationPrincipal UserDetails userDetails, @RequestBody @Valid TendencyReqDTO.TendencySurveyDTO request){
@@ -33,5 +32,15 @@ public class TendencyController {
         TendencyResDTO.TendencyResultDTO result = tendencyCommandService.submitTendency(userId, request);
 
         return ApiResponse.onSuccess(TendencySuccessCode.TENDENCY_SURVEY_SUCCESS, result);
+    }
+
+    @GetMapping("/me")
+    public ApiResponse<TendencyResDTO.TendencyViewDTO> getMyQuery(@AuthenticationPrincipal UserDetails userDetails) {
+
+        Long userId = Long.valueOf(userDetails.getUsername());
+
+        TendencyResDTO.TendencyViewDTO result = tendencyQueryService.getMyTendency(userId);
+
+        return ApiResponse.onSuccess(TendencySuccessCode.TENDENCY_QUERY_SUCCESS, result);
     }
 }

@@ -42,4 +42,14 @@ public class TendencyConverter {
                 .familiarityLabel(tendency.getFamiliarityLabel())
                 .build();
     }
+
+    public static TendencyResDTO.TendencyViewDTO toTendencyViewDTO(Tendency tendency){
+        return TendencyResDTO.TendencyViewDTO.builder()
+                .investmentType(tendency.getInvestmentType())
+                .riskLabel(tendency.getRiskLabel())
+                .periodLabel(tendency.getPeriodLabel())
+                .familiarityLabel(tendency.getFamiliarityLabel())
+                .imageBasicUrl(tendency.getImageUrl())
+                .build();
+    }
 }

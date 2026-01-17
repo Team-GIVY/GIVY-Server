@@ -16,4 +16,13 @@ public class TendencyResDTO {
             String periodLabel,      // 예: "단기"
             String familiarityLabel  // 예: "안정형"
     ){}
+
+    @Builder
+    public record TendencyViewDTO(
+            String investmentType,
+            String imageBasicUrl,
+            String riskLabel,        // 예: "안정추구"
+            String periodLabel,      // 예: "단기"
+            String familiarityLabel  // 예: "안정형"
+    ){}
 }
