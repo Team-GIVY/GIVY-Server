@@ -1,5 +1,6 @@
 package com.example.givy.domain.recommendation.entity;
 
+import com.example.givy.domain.recommendation.dto.res.TendencyResDTO;
 import com.example.givy.domain.user.entity.Users;
 import com.example.givy.global.common.BaseEntity;
 import jakarta.persistence.*;
@@ -37,24 +38,13 @@ public class Tendency extends BaseEntity {
     @Builder.Default
     private int scoreL = 1;
 
-    //소비 성향
-    @Column(name = "score_c", nullable = false)
-    @Builder.Default
-    private int scoreC = 1;
-
     //3이 아니라 4 아닌가
     @Column(name = "total_score", nullable = false)
     @Builder.Default
     private int totalScore = 3;
 
-    @Column(name="image_basic_url", nullable = false)
-    private String imageBasicUrl;
-
-    @Column(name="image_surprise_url", nullable = false)
-    private String imageSurpriseUrl;
-
-    @Column(name="image_question_url", nullable = false)
-    private String imageQuestionUrl;
+    @Column(name="image_url", nullable = false)
+    private String imageUrl;
 
     //mapping
     @ManyToOne
@@ -63,6 +53,15 @@ public class Tendency extends BaseEntity {
 
     @OneToMany(mappedBy="tendency")
     private List<RecommendationEvent> recommendationEvent = new ArrayList<>();
+
+    public void update(TendencyResDTO.TendencyResultDTO result) {
+        this.investmentType = result.investmentType();
+        this.scoreT = result.scoreT();
+        this.scoreR = result.scoreR();
+        this.scoreL = result.scoreL();
+        this.totalScore = result.totalScore();
+        this.imageUrl = result.imageBasicUrl();
+    }
 
 }
 
