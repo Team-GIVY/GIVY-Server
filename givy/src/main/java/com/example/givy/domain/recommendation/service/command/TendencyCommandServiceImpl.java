@@ -6,7 +6,10 @@ import com.example.givy.domain.recommendation.dto.res.TendencyResDTO;
 import com.example.givy.domain.recommendation.entity.Tendency;
 import com.example.givy.domain.recommendation.enums.InvestmentType;
 import com.example.givy.domain.recommendation.repository.TendencyRepository;
+import com.example.givy.domain.user.code.UserErrorCode;
 import com.example.givy.domain.user.entity.Users;
+import com.example.givy.domain.user.exception.UserException;
+import com.example.givy.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,22 +21,27 @@ import java.util.List;
 public class TendencyCommandServiceImpl implements TendencyCommandService{
 
     private final TendencyRepository tendencyRepository;
+    private final UserRepository userRepository;
 
     @Override
     @Transactional
-    public TendencyResDTO.TendencyResultDTO submitTendency(Users user, TendencyReqDTO.TendencySurveyDTO request) {
+    public TendencyResDTO.TendencyResultDTO submitTendency(Long userId, TendencyReqDTO.TendencySurveyDTO request) {
+
+        Users user = userRepository.findById(userId).orElseThrow(() -> new UserException(UserErrorCode.USER_ID_NOT_FOUND));
 
         TendencyResDTO.TendencyResultDTO result = calculateTendency(request);
 
-        tendencyRepository.findByUsers(user).ifPresentOrElse(
-                existingTendency -> existingTendency.update(result),
-                () -> {
+        Tendency savedTendency = tendencyRepository.findByUsers(user)
+                .map(existingTendency -> {
+                    existingTendency.update(result);
+                    return existingTendency;
+                })
+                .orElseGet(() -> {
                     Tendency newTendency = TendencyConverter.toTendency(user, result);
-                    tendencyRepository.save(newTendency);
-                }
-        );
+                    return tendencyRepository.save(newTendency);
+                });
 
-        return result;
+        return TendencyConverter.toTendencyResultDTO(savedTendency);
     }
 
     private TendencyResDTO.TendencyResultDTO calculateTendency(TendencyReqDTO.TendencySurveyDTO request) {
@@ -49,35 +57,9 @@ public class TendencyCommandServiceImpl implements TendencyCommandService{
 
         String imageUrl = getImageUrl(investmentType);
 
-        String riskLabel = getRiskLabel(scoreR, scoreT);
-        String periodLabel = getPeriodLabel(scoreL);
-        String familiarityLabel = getFamiliarityLabel(scoreT);
-
-        TendencyResDTO.TendencyResultDTO resultDTO = TendencyConverter.toTendencyResDTO(scoreR, scoreL, scoreT, totalScore, investmentType, imageUrl, riskLabel, periodLabel, familiarityLabel);
+        TendencyResDTO.TendencyResultDTO resultDTO = TendencyConverter.toTendencyResDTO(scoreR, scoreL, scoreT, totalScore, investmentType, imageUrl);
 
         return resultDTO;
-    }
-
-    private String getRiskLabel(int r, int t) {
-        if (r <= 2 || (r == 3 && t <= 3)) {
-            return "안정추구";
-        } else if (r <= 5) {
-            return "위험선호";
-        } else {
-            return "직접참여";
-        }
-    }
-
-    private String getPeriodLabel(int l) {
-        if (l <= 3) return "단기";
-        if (l == 4) return "중기";
-        return "장기";
-    }
-
-    private String getFamiliarityLabel(int t) {
-        if (t <= 2) return "안정형";
-        if (t <= 4) return "중립형";
-        return "공격형";
     }
 
     private String getImageUrl(String type) {

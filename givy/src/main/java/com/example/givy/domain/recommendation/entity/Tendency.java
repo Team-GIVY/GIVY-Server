@@ -63,5 +63,27 @@ public class Tendency extends BaseEntity {
         this.imageUrl = result.imageBasicUrl();
     }
 
+    public String getRiskLabel() {
+        if (this.scoreR <= 2 || (this.scoreR == 3 && this.scoreT <= 3)) {
+            return "안정추구";
+        } else if (this.scoreR <= 5) {
+            return "위험선호";
+        } else {
+            return "직접참여";
+        }
+    }
+
+    public String getPeriodLabel() {
+        if (this.scoreL <= 3) return "단기";
+        if (this.scoreL == 4) return "중기";
+        return "장기";
+    }
+
+    public String getFamiliarityLabel() {
+        if (this.scoreT <= 2) return "안정형";
+        if (this.scoreT <= 4) return "중립형";
+        return "공격형";
+    }
+
 }
 

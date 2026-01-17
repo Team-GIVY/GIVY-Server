@@ -24,14 +24,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class TendencyController {
 
     private final TendencyCommandService tendencyCommandService;
-    private final UserRepository userRepository;
 
     @PostMapping
     public ApiResponse<TendencyResDTO.TendencyResultDTO> submitTendency(@AuthenticationPrincipal UserDetails userDetails, @RequestBody @Valid TendencyReqDTO.TendencySurveyDTO request){
 
         Long userId = Long.valueOf(userDetails.getUsername());
-        Users user = userRepository.findById(userId).orElseThrow(() -> new UserException(UserErrorCode.USER_ID_NOT_FOUND));
-        TendencyResDTO.TendencyResultDTO result = tendencyCommandService.submitTendency(user, request);
+
+        TendencyResDTO.TendencyResultDTO result = tendencyCommandService.submitTendency(userId, request);
 
         return ApiResponse.onSuccess(TendencySuccessCode.TENDENCY_SURVEY_SUCCESS, result);
     }

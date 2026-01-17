@@ -18,7 +18,7 @@ public class TendencyConverter {
                 .build();
     }
 
-    public static TendencyResDTO.TendencyResultDTO toTendencyResDTO(int scoreR, int scoreL, int scoreT, int totalScore, String investmentType, String imageUrl, String riskLabel, String periodLabel, String familiarityLabel){
+    public static TendencyResDTO.TendencyResultDTO toTendencyResDTO(int scoreR, int scoreL, int scoreT, int totalScore, String investmentType, String imageUrl){
         return TendencyResDTO.TendencyResultDTO.builder()
                 .scoreR(scoreR)
                 .scoreL(scoreL)
@@ -26,9 +26,20 @@ public class TendencyConverter {
                 .totalScore(totalScore)
                 .investmentType(investmentType)
                 .imageBasicUrl(imageUrl)
-                .riskLabel(riskLabel)
-                .periodLabel(periodLabel)
-                .familiarityLabel(familiarityLabel)
+                .build();
+    }
+
+    public static TendencyResDTO.TendencyResultDTO toTendencyResultDTO(Tendency tendency) {
+        return TendencyResDTO.TendencyResultDTO.builder()
+                .scoreR(tendency.getScoreR())
+                .scoreL(tendency.getScoreL())
+                .scoreT(tendency.getScoreT())
+                .totalScore(tendency.getTotalScore())
+                .investmentType(tendency.getInvestmentType())
+                .imageBasicUrl(tendency.getImageUrl())
+                .riskLabel(tendency.getRiskLabel())
+                .periodLabel(tendency.getPeriodLabel())
+                .familiarityLabel(tendency.getFamiliarityLabel())
                 .build();
     }
 }
