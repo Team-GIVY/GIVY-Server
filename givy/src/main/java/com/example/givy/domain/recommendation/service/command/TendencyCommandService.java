@@ -5,4 +5,5 @@ import com.example.givy.domain.recommendation.dto.res.TendencyResDTO;
 
 public interface TendencyCommandService {
     TendencyResDTO.TendencyResultDTO submitTendency(Long userId, TendencyReqDTO.TendencySurveyDTO request);
+    TendencyResDTO.RecommendationResultDTO createRecommendation(Long userId);
 }

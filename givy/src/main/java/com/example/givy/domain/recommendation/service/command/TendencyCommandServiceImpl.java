@@ -1,10 +1,17 @@
 package com.example.givy.domain.recommendation.service.command;
 
+import com.example.givy.domain.commerce.entity.Product;
+import com.example.givy.domain.commerce.repository.ProductRepository;
 import com.example.givy.domain.recommendation.converter.TendencyConverter;
 import com.example.givy.domain.recommendation.dto.req.TendencyReqDTO;
 import com.example.givy.domain.recommendation.dto.res.TendencyResDTO;
+import com.example.givy.domain.recommendation.entity.RecommendationEvent;
+import com.example.givy.domain.recommendation.entity.RecommendationItem;
 import com.example.givy.domain.recommendation.entity.Tendency;
 import com.example.givy.domain.recommendation.enums.InvestmentType;
+import com.example.givy.domain.recommendation.exception.TendencyException;
+import com.example.givy.domain.recommendation.exception.code.TendencyErrorCode;
+import com.example.givy.domain.recommendation.repository.RecommendationEventRepository;
 import com.example.givy.domain.recommendation.repository.TendencyRepository;
 import com.example.givy.domain.user.code.UserErrorCode;
 import com.example.givy.domain.user.entity.Users;
@@ -15,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +30,8 @@ public class TendencyCommandServiceImpl implements TendencyCommandService{
 
     private final TendencyRepository tendencyRepository;
     private final UserRepository userRepository;
+    private final ProductRepository productRepository;
+    private final RecommendationEventRepository recommendationEventRepository;
 
     @Override
     @Transactional
@@ -43,6 +53,37 @@ public class TendencyCommandServiceImpl implements TendencyCommandService{
 
         return TendencyConverter.toTendencyResultDTO(savedTendency);
     }
+
+    @Override
+    @Transactional
+    public TendencyResDTO.RecommendationResultDTO createRecommendation(Long userId) {
+
+        Users user = userRepository.findById(userId).orElseThrow(() -> new UserException(UserErrorCode.USER_ID_NOT_FOUND));
+
+        Tendency tendency = tendencyRepository.findByUsers(user).orElseThrow(() -> new TendencyException(TendencyErrorCode.TENDENCY_NOT_FOUND));
+
+        InvestmentType investmentType = InvestmentType.valueOf(tendency.getInvestmentType());
+
+        List<Product> products = productRepository.findAllByRecommendationType(investmentType);
+
+        if (products.isEmpty()) {
+            throw new TendencyException(TendencyErrorCode.RECOMMENDATION_PRODUCT_NOT_FOUND);
+        }
+
+        int randomIndex = new Random().nextInt(products.size());
+        Product bestProduct = products.get(randomIndex);
+
+        RecommendationEvent recommendationEvent = TendencyConverter.toRecommendationEvent(tendency, bestProduct);
+        recommendationEventRepository.save(recommendationEvent);
+
+        for (Product product : products) {
+            RecommendationItem recommendationItem = TendencyConverter.toRecommendationItem(recommendationEvent, product);
+            recommendationEvent.addItem(recommendationItem);
+        }
+
+        return TendencyConverter.toRecommendationResultDTO(tendency.getInvestmentType(), bestProduct.getName(), bestProduct.getCode());
+    }
+
 
     private TendencyResDTO.TendencyResultDTO calculateTendency(TendencyReqDTO.TendencySurveyDTO request) {
         List<String> answers = request.survey();

@@ -1,5 +1,6 @@
 package com.example.givy.domain.commerce.entity;
 
+import com.example.givy.domain.recommendation.enums.InvestmentType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -47,4 +48,8 @@ public class Product {
 
     @Column(name="maker_comment", nullable = false, columnDefinition = "TEXT")
     private String makerComment;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name="recommendation_type")
+    private InvestmentType recommendationType;
 }

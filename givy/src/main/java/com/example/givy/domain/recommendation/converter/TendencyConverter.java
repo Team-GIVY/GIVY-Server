@@ -1,6 +1,9 @@
 package com.example.givy.domain.recommendation.converter;
 
+import com.example.givy.domain.commerce.entity.Product;
 import com.example.givy.domain.recommendation.dto.res.TendencyResDTO;
+import com.example.givy.domain.recommendation.entity.RecommendationEvent;
+import com.example.givy.domain.recommendation.entity.RecommendationItem;
 import com.example.givy.domain.recommendation.entity.Tendency;
 import com.example.givy.domain.user.entity.Users;
 
@@ -50,6 +53,28 @@ public class TendencyConverter {
                 .periodLabel(tendency.getPeriodLabel())
                 .familiarityLabel(tendency.getFamiliarityLabel())
                 .imageBasicUrl(tendency.getImageUrl())
+                .build();
+    }
+
+    public static RecommendationEvent toRecommendationEvent(Tendency tendency, Product bestProduct){
+        return RecommendationEvent.builder()
+                .tendency(tendency)
+                .bestProduct(bestProduct)
+                .build();
+    }
+
+    public static RecommendationItem toRecommendationItem(RecommendationEvent recommendationEvent, Product product){
+        return RecommendationItem.builder()
+                .recommendationEvent(recommendationEvent)
+                .product(product)
+                .build();
+    }
+
+    public static TendencyResDTO.RecommendationResultDTO toRecommendationResultDTO(String investmentType, String bestProductName, String bestProductCode){
+        return TendencyResDTO.RecommendationResultDTO.builder()
+                .investmentType(investmentType)
+                .bestProductName(bestProductName)
+                .bestProductCode(bestProductCode)
                 .build();
     }
 }

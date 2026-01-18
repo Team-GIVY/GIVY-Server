@@ -25,4 +25,12 @@ public class TendencyResDTO {
             String periodLabel,      // 예: "단기"
             String familiarityLabel  // 예: "안정형"
     ){}
+
+    @Builder
+    public record RecommendationResultDTO(
+            String investmentType,
+            String bestProductName,
+            String bestProductCode
+    ){}
+
 }
