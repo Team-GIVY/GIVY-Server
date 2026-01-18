@@ -3,6 +3,7 @@ package com.example.givy.domain.user.entity;
 import com.example.givy.domain.guide.entity.GuideLike;
 import com.example.givy.domain.guide.entity.GuideStore;
 import com.example.givy.domain.recommendation.entity.Tendency;
+import com.example.givy.domain.user.dto.req.UserReqDTO;
 import com.example.givy.domain.user.enums.Language;
 import com.example.givy.domain.user.enums.Role;
 import com.example.givy.domain.user.enums.SocialType;
@@ -62,33 +63,79 @@ public class Users extends BaseEntity {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
+    @Column(name = "securities_name")
+    private String securitiesName;
+
+    @Column(name = "is_securities_connected", nullable = false)
+    @Builder.Default
+    private Boolean isSecuritiesConnected = false;
+
+    @Column(name = "connected_at")
+    private LocalDateTime connectedAt;
+
     //erd 추가
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false, length = 20)
     private Role role;
-
+    
     //mapping
     @OneToMany(mappedBy = "users")
     private List<UserAsset> assets = new ArrayList<>();
-
+    
     @OneToMany(mappedBy = "users")
     private List<Tendency> tendency = new ArrayList<>();
 
-    @OneToMany(mappedBy = "users")
+    @OneToMany(mappedBy="users")
     private List<UserNotification> userNotification = new ArrayList<>();
 
-    @OneToMany(mappedBy = "users")
+    @OneToMany(mappedBy="users")
     private List<UserStamp> userStamp = new ArrayList<>();
 
-    @OneToMany(mappedBy = "users")
+    @OneToMany(mappedBy="users")
     private List<BuyHistory> buyHistory = new ArrayList<>();
 
-    @OneToMany(mappedBy = "users")
+    @OneToMany(mappedBy="users")
     private List<GuideLike> guideLike = new ArrayList<>();
 
-    @OneToMany(mappedBy = "users")
+    @OneToMany(mappedBy="users")
     private List<GuideStore> guideStore = new ArrayList<>();
 
     @OneToMany(mappedBy = "users")
     private List<UserSecuritiesAccount> userSecuritiesAccount = new ArrayList<>();
+
+    // 01-04번 API - 프로필 완성을 위한 메서드
+    public void completeSocialProfile(UserReqDTO.UserProfileDTO dto) {
+        this.name = dto.getName();
+        this.nickname = dto.getNickname();
+        this.language = dto.getLanguage();
+        this.profileImageUrl = dto.getProfileImageUrl();
+    }
+
+    /* 05-01 프로필 수정 */
+    public void updateProfile(
+            String nickname,
+            Language language,
+            String profileImageUrl
+    ) {
+        this.nickname = nickname;
+        this.language = language;
+        this.profileImageUrl = profileImageUrl;
+    }
+
+    /* 05-02 비밀번호 변경 */
+    public void changePassword(String encodedPassword) {
+        this.password = encodedPassword;
+    }
+
+    /* 05-06 앱 언어 변경 */
+    public void updateLanguage(Language language) {
+        this.language = language;
+    }
+
+    /* 05-08 회원 탈퇴 */
+    public void withdraw(LocalDateTime now) {
+        this.deletedAt = now;
+    }
+
+
 }

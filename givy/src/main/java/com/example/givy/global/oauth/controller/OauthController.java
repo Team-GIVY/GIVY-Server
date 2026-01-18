@@ -28,6 +28,7 @@ public class OauthController {
      * 1) 카카오 로그인 시작
      *    클라이언트가 호출하면 → 카카오 로그인 페이지로 redirect됨
      */
+    /* 01-03 카카오 로그인 API */
     @GetMapping("/kakao/login")
     public void redirectToKakao(HttpServletResponse response) throws IOException {
         response.sendRedirect(kakaoOauthService.generateKakaoLoginUrl());
