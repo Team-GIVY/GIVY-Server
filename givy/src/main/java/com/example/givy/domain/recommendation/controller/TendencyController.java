@@ -10,9 +10,14 @@ import com.example.givy.domain.user.entity.Users;
 import com.example.givy.domain.user.exception.UserException;
 import com.example.givy.domain.user.repository.UserRepository;
 import com.example.givy.global.apiPayLoad.ApiResponse;
+import com.example.givy.global.security.CustomPrincipal;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,9 +30,9 @@ public class TendencyController {
     private final TendencyQueryService tendencyQueryService;
 
     @PostMapping
-    public ApiResponse<TendencyResDTO.TendencyResultDTO> submitTendency(@AuthenticationPrincipal UserDetails userDetails, @RequestBody @Valid TendencyReqDTO.TendencySurveyDTO request){
+    public ApiResponse<TendencyResDTO.TendencyResultDTO> submitTendency(@AuthenticationPrincipal CustomPrincipal principal, @RequestBody @Valid TendencyReqDTO.TendencySurveyDTO request){
 
-        Long userId = Long.valueOf(userDetails.getUsername());
+        Long userId = principal.getUserId();
 
         TendencyResDTO.TendencyResultDTO result = tendencyCommandService.submitTendency(userId, request);
 
