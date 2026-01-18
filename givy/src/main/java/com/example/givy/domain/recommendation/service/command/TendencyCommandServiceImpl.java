@@ -104,7 +104,7 @@ public class TendencyCommandServiceImpl implements TendencyCommandService{
     }
 
     private String getImageUrl(String type) {
-        InvestmentType investmentType = InvestmentType.valueOf(type);
+        InvestmentType investmentType = InvestmentType.findByDescription(type);
         String fileName = switch (investmentType){
             case THEME -> "img_charater_bankbook_default.png";
             case MARKET -> "img_charater_card_default.png";
@@ -129,31 +129,31 @@ public class TendencyCommandServiceImpl implements TendencyCommandService{
         // 안정추구
         if (r <= 2 || (r == 3 && t <= 3)){
             if (l <= 3){ // 단기
-                return (t <= 4) ? InvestmentType.PARKING.getValue() : InvestmentType.ASSET.getValue();
+                return (t <= 4) ? InvestmentType.PARKING.getDescription() : InvestmentType.ASSET.getDescription();
             } else if (l == 4) { // 중기
-                return (t <= 2) ? InvestmentType.PARKING.getValue() : (t <= 4 ? InvestmentType.ASSET.getValue() : InvestmentType.FUND.getValue());
+                return (t <= 2) ? InvestmentType.PARKING.getDescription() : (t <= 4 ? InvestmentType.ASSET.getDescription() : InvestmentType.FUND.getDescription());
             } else { // 장기
-                return (t <= 2) ? InvestmentType.ASSET.getValue() : (t <= 4 ? InvestmentType.FUND.getValue() : InvestmentType.ASSET.getValue());
+                return (t <= 2) ? InvestmentType.ASSET.getDescription() : (t <= 4 ? InvestmentType.FUND.getDescription() : InvestmentType.ASSET.getDescription());
             }
         }
 
         else if (r <= 5){ // 위험선호
             if (l <= 3){ // 단기
-                return (t <= 2) ? InvestmentType.PARKING.getValue() : (t <= 4 ? InvestmentType.MARKET.getValue() : InvestmentType.ASSET.getValue());
+                return (t <= 2) ? InvestmentType.PARKING.getDescription() : (t <= 4 ? InvestmentType.MARKET.getDescription() : InvestmentType.ASSET.getDescription());
             } else if (l == 4) { // 중기
-                return (t <= 2) ? InvestmentType.PARKING.getValue() : (t <= 4 ? InvestmentType.FUND.getValue() : InvestmentType.ASSET.getValue());
+                return (t <= 2) ? InvestmentType.PARKING.getDescription() : (t <= 4 ? InvestmentType.FUND.getDescription() : InvestmentType.ASSET.getDescription());
             } else { // 장기
-                return (t <= 2) ? InvestmentType.FUND.getValue() : (t <= 4 ? InvestmentType.ASSET.getValue() : InvestmentType.MARKET.getValue());
+                return (t <= 2) ? InvestmentType.FUND.getDescription() : (t <= 4 ? InvestmentType.ASSET.getDescription() : InvestmentType.MARKET.getDescription());
             }
         }
 
         else{ // 직접참여
             if (l <= 3){ // 단기
-                return (t <= 2) ? InvestmentType.PARKING.getValue() : (t <= 4 ? InvestmentType.ASSET.getValue() : InvestmentType.MARKET.getValue());
+                return (t <= 2) ? InvestmentType.PARKING.getDescription() : (t <= 4 ? InvestmentType.ASSET.getDescription() : InvestmentType.MARKET.getDescription());
             } else if (l == 4) { // 중기
-                return (t <= 2) ? InvestmentType.ASSET.getValue() : (t <= 4 ? InvestmentType.MARKET.getValue() : InvestmentType.THEME.getValue());
+                return (t <= 2) ? InvestmentType.ASSET.getDescription() : (t <= 4 ? InvestmentType.MARKET.getDescription() : InvestmentType.THEME.getDescription());
             } else { // 장기
-                return (t <= 2) ? InvestmentType.ASSET.getValue() : (t <= 4 ? InvestmentType.MARKET.getValue() : InvestmentType.THEME.getValue());
+                return (t <= 2) ? InvestmentType.ASSET.getDescription() : (t <= 4 ? InvestmentType.MARKET.getDescription() : InvestmentType.THEME.getDescription());
             }
         }
     }
