@@ -62,7 +62,7 @@ public class TendencyCommandServiceImpl implements TendencyCommandService{
 
         Tendency tendency = tendencyRepository.findByUsers(user).orElseThrow(() -> new TendencyException(TendencyErrorCode.TENDENCY_NOT_FOUND));
 
-        InvestmentType investmentType = InvestmentType.valueOf(tendency.getInvestmentType());
+        InvestmentType investmentType = InvestmentType.findByDescription(tendency.getInvestmentType());
 
         List<Product> products = productRepository.findAllByRecommendationType(investmentType);
 
