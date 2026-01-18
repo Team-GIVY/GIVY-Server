@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -36,9 +35,9 @@ public class TendencyController {
     }
 
     @GetMapping("/me")
-    public ApiResponse<TendencyResDTO.TendencyViewDTO> getMyQuery(@AuthenticationPrincipal UserDetails userDetails) {
+    public ApiResponse<TendencyResDTO.TendencyViewDTO> getMyQuery(@AuthenticationPrincipal CustomPrincipal principal) {
 
-        Long userId = Long.valueOf(userDetails.getUsername());
+        Long userId = principal.getUserId();
 
         TendencyResDTO.TendencyViewDTO result = tendencyQueryService.getMyTendency(userId);
 
