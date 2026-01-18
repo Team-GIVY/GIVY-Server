@@ -7,6 +7,8 @@ import com.example.givy.domain.recommendation.entity.RecommendationItem;
 import com.example.givy.domain.recommendation.entity.Tendency;
 import com.example.givy.domain.user.entity.Users;
 
+import java.util.List;
+
 public class TendencyConverter {
 
     public static Tendency toTendency(Users users, TendencyResDTO.TendencyResultDTO resultDTO){
@@ -75,6 +77,26 @@ public class TendencyConverter {
                 .investmentType(investmentType)
                 .bestProductName(bestProductName)
                 .bestProductCode(bestProductCode)
+                .build();
+    }
+
+    public static TendencyResDTO.ProductOverviewDTO toProductOverviewDTO(Product product){
+        return TendencyResDTO.ProductOverviewDTO.builder()
+                .productId(product.getProductId())
+                .name(product.getName())
+                .code(product.getCode())
+                .imageUrl(product.getImageUrl())
+                .tagline(product.getTagline())
+                .description(product.getDescription())
+                .rateAvg(product.getRateAvg())
+                .build();
+    }
+
+    public static TendencyResDTO.RecommendationListDTO toRecommendationListDTO(RecommendationEvent event, Tendency tendency, List<TendencyResDTO.ProductOverviewDTO> productsDTO){
+        return TendencyResDTO.RecommendationListDTO.builder()
+                .recommendationEventId(event.getRecommendationEventId())
+                .investmentType(tendency.getInvestmentType())
+                .products(productsDTO)
                 .build();
     }
 }

@@ -53,4 +53,14 @@ public class TendencyController {
 
         return ApiResponse.onSuccess(TendencySuccessCode.RECOMMENDATION_CREATED, result);
     }
+
+    @GetMapping("/recommendations")
+    public ApiResponse<TendencyResDTO.RecommendationListDTO> queryRecommendations(@AuthenticationPrincipal CustomPrincipal principal){
+
+        Long userId = principal.getUserId();
+
+        TendencyResDTO.RecommendationListDTO result = tendencyQueryService.getMyRecommendations(userId);
+
+        return ApiResponse.onSuccess(TendencySuccessCode.RECOMMENDATION_LIST_QUERY_SUCCESS, result);
+    }
 }

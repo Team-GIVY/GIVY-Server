@@ -2,6 +2,8 @@ package com.example.givy.domain.recommendation.dto.res;
 
 import lombok.Builder;
 
+import java.util.List;
+
 public class TendencyResDTO {
 
     @Builder
@@ -31,6 +33,24 @@ public class TendencyResDTO {
             String investmentType,
             String bestProductName,
             String bestProductCode
+    ){}
+
+    @Builder
+    public record RecommendationListDTO(
+            Long recommendationEventId,
+            String investmentType,
+            List<ProductOverviewDTO> products
+    ){}
+
+    @Builder
+    public record ProductOverviewDTO(
+            Long productId,
+            String name,
+            String code,
+            String imageUrl,
+            String tagline,
+            String description,
+            Double rateAvg
     ){}
 
 }
