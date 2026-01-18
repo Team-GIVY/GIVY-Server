@@ -6,6 +6,7 @@ package com.example.givy.global.oauth.service;
  */
 
 import com.example.givy.domain.user.entity.Users;
+import com.example.givy.domain.user.enums.Language;
 import com.example.givy.domain.user.enums.Role;
 import com.example.givy.domain.user.repository.UserRepository;
 import com.example.givy.global.oauth.model.KakaoUserInfo;
@@ -39,8 +40,10 @@ public class OauthUserService {
         Users user = Users.builder()
                 .email(info.getEmail())
                 .password(encodedPassword)
-                .name(info.getNickname())
+                .name("프로필을 완성해주세요")
+                .nickname(info.getNickname())
                 .role(Role.USER)
+                .language(Language.KO)
                 .build();
 
         return userRepository.save(user);

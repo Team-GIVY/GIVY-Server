@@ -12,7 +12,9 @@ public class UserConverter {
         return Users.builder()
                 .email(dto.getEmail())
                 .password(encodedPw)
-                .name(dto.getUsername())
+                .name(dto.getName())
+                .nickname(dto.getNickname())
+                .language(dto.getLanguage())
                 .role(Role.USER)
                 .build();
     }

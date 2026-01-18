@@ -8,4 +8,6 @@ import java.util.Optional;
 
 public interface TendencyRepository extends JpaRepository<Tendency, Long> {
     Optional<Tendency> findByUsers(Users users);
+
+    Optional<Tendency> findTopByUsers_UserIdOrderByCreatedAtDesc(Long userId);
 }
