@@ -45,9 +45,9 @@ public class TendencyController {
     }
 
     @PostMapping("recommendations")
-    public ApiResponse<TendencyResDTO.RecommendationResultDTO> createRecommendation(@AuthenticationPrincipal UserDetails userDetails){
+    public ApiResponse<TendencyResDTO.RecommendationResultDTO> createRecommendation(@AuthenticationPrincipal CustomPrincipal principal){
 
-        Long userId = Long.valueOf(userDetails.getUsername());
+        Long userId = principal.getUserId();
 
         TendencyResDTO.RecommendationResultDTO result = tendencyCommandService.createRecommendation(userId);
 
