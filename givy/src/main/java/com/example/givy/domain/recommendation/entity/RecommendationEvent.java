@@ -33,6 +33,7 @@ public class RecommendationEvent extends BaseEntity {
     @JoinColumn(name="tendency_id",  nullable = false)
     private Tendency tendency;
 
+    @Builder.Default
     @OneToMany(mappedBy="recommendationEvent", cascade = CascadeType.ALL)
     private List<RecommendationItem> recommendationItems = new ArrayList<>();
 

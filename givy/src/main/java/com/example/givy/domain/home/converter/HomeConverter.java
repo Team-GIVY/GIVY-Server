@@ -15,9 +15,12 @@ public class HomeConverter {
                 .build();
     }
 
-    public static HomeResDTO.BeforeHomeDTO toBeforeHomeDTO(Tendency tendency){
+    public static HomeResDTO.BeforeHomeDTO toBeforeHomeDTO(Tendency tendency, Product bestProduct) {
+        String goal;
+        goal = bestProduct.getTheme();
+
         return HomeResDTO.BeforeHomeDTO.builder()
-                .goal()
+                .goal(goal)
                 .expectedAmount(50000)
                 .characterImageUrl(tendency.getImageUrl())
                 .build();

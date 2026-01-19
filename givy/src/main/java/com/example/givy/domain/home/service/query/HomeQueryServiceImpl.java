@@ -7,9 +7,11 @@ import com.example.givy.domain.commerce.entity.Product;
 import com.example.givy.domain.commerce.repository.ProductRepository;
 import com.example.givy.domain.home.converter.HomeConverter;
 import com.example.givy.domain.home.dto.res.HomeResDTO;
+import com.example.givy.domain.recommendation.entity.RecommendationEvent;
 import com.example.givy.domain.recommendation.entity.Tendency;
 import com.example.givy.domain.recommendation.exception.TendencyException;
 import com.example.givy.domain.recommendation.exception.code.TendencyErrorCode;
+import com.example.givy.domain.recommendation.repository.RecommendationEventRepository;
 import com.example.givy.domain.recommendation.repository.TendencyRepository;
 import com.example.givy.domain.user.code.UserErrorCode;
 import com.example.givy.domain.user.entity.Users;
@@ -29,7 +31,7 @@ public class HomeQueryServiceImpl implements HomeQueryService{
     private final ChallengeRepository challengeRepository;
     private final TendencyRepository tendencyRepository;
     private final UserSecuritiesAccountRepository userSecuritiesAccountRepository;
-
+    private final RecommendationEventRepository recommendationEventRepository;
 
     @Override
     public HomeResDTO.HomeResponseDTO getHome(Long userId) {
@@ -44,12 +46,16 @@ public class HomeQueryServiceImpl implements HomeQueryService{
             StartChallenge challenge = challengeOpt.get();
             Product product = challenge.getProduct();
 
-            String securitiesName = userSecuritiesAccountRepository.findByUser(user).map(account -> account.getSecuritiesName()).orElseThrow(() -> new UserException(UserErrorCode.USER_SECURITIES_ACCOUNT_NOT_FOUND));
+            String securitiesName = userSecuritiesAccountRepository.findByUsers(user).map(account -> account.getSecuritiesName()).orElseThrow(() -> new UserException(UserErrorCode.USER_SECURITIES_ACCOUNT_NOT_FOUND));
 
             HomeResDTO.AfterHomeDTO afterData = HomeConverter.toAfterHomeDTO(user, product, securitiesName);
             return HomeConverter.toHomeResponseDTO(user, "AFTER_CHALLENGE", afterData);
         } else {
-            HomeResDTO.BeforeHomeDTO beforeDTO = HomeConverter.toBeforeHomeDTO(tendency);
+            RecommendationEvent event = recommendationEventRepository.findTopByTendencyOrderByCreatedAtDesc(tendency).orElseThrow(() -> new TendencyException(TendencyErrorCode.RECOMMENDATION_NOT_FOUND));
+
+            Product bestProduct = event.getBestProduct();
+
+            HomeResDTO.BeforeHomeDTO beforeDTO = HomeConverter.toBeforeHomeDTO(tendency, bestProduct);
             return HomeConverter.toHomeResponseDTO(user, "BEFORE_CHALLENGE", beforeDTO);
         }
     }
