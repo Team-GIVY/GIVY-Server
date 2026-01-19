@@ -1,9 +1,16 @@
 package com.example.givy.domain.user.converter;
 
+import com.example.givy.domain.challenge.entity.Stamp;
 import com.example.givy.domain.user.dto.req.UserReqDTO;
+import com.example.givy.domain.user.dto.req.UserSecuritiesReqDTO;
 import com.example.givy.domain.user.dto.res.UserResDTO;
+import com.example.givy.domain.user.dto.res.UserSecuritiesResDTO;
+import com.example.givy.domain.user.entity.UserSecuritiesAccount;
+import com.example.givy.domain.user.entity.UserStamp;
 import com.example.givy.domain.user.entity.Users;
 import com.example.givy.domain.user.enums.Role;
+
+import java.util.List;
 
 public class UserConverter {
 
@@ -44,5 +51,43 @@ public class UserConverter {
                 .build();
     }
 
+    // RegisterSecuritiesAccountDTO -> Entity
+    public static List<UserSecuritiesAccount> toUserSecuritiesEntity(Users user, UserSecuritiesReqDTO.RegisterSecuritiesDTO dto) {
+        return dto.getSecurities().stream()
+                .map(name -> UserSecuritiesAccount.builder()
+                        .securitiesName(name)
+                        .users(user)
+                        .build())
+                .toList();
+    }
+
+    //Entity -> UserSecuritiesListDTO
+    public static UserSecuritiesResDTO.UserSecuritiesListDTO toUserSecuritiesListDTO(List<UserSecuritiesAccount> entities) {
+        return UserSecuritiesResDTO.UserSecuritiesListDTO.builder()
+                .securitiesList(entities.stream()
+                        .map(entity -> UserSecuritiesResDTO.UserSecuritiesInfoDTO.builder()
+                                .accountId(entity.getAccountId())
+                                .securitiesName(entity.getSecuritiesName())
+                                .build())
+                        .toList())
+                .build();
+    }
+
+    //Entity -> AgeVerificationResDTO
+    public static UserResDTO.AgeVerificationResDTO toAgeVerificationResDTO(Users user, boolean isAdult){
+        return UserResDTO.AgeVerificationResDTO.builder()
+                .userId(user.getUserId())
+                .isAdult(isAdult)
+                .birth(user.getBirth())
+                .build();
+    }
+
+    //스탬프 entity
+    public static UserStamp toUserStampEntity(Users user, Stamp stamp){
+        return UserStamp.builder()
+                .users(user)
+                .stamp(stamp)
+                .build();
+    }
 
 }

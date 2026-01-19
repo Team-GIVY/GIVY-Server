@@ -25,7 +25,7 @@ public class StartChallenge extends BaseEntity {
     //mapping
     @ManyToOne
     @JoinColumn(name="user_id")
-    private Users user;
+    private Users users;
 
     @ManyToOne
     @JoinColumn(name="stamp_id")
@@ -34,4 +34,12 @@ public class StartChallenge extends BaseEntity {
     @ManyToOne
     @JoinColumn(name="product_id")
     private Product product;
+
+    public void updateStatus(){
+        this.status = Status.COMPLETED;
+    }
+
+    public void updateStamp(Stamp stamp){
+        this.stamp = stamp;
+    }
 }
