@@ -40,4 +40,8 @@ public class UserNotification {
     @ManyToOne
     @JoinColumn(name="user_id")
     private Users users;
+
+    public void readNotification(){
+        this.isRead = true;
+    }
 }
