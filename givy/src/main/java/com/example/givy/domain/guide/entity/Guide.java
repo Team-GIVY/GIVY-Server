@@ -1,5 +1,6 @@
 package com.example.givy.domain.guide.entity;
 
+import com.example.givy.domain.guide.enums.GuideCategory;
 import com.example.givy.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -37,8 +38,8 @@ public class Guide extends BaseEntity {
     private Long storeCount = 0L;
 
     //카테고리 태그(ex. 주식초보, 절약팁)
-    @Column(name = "category")
-    private String category;
+    @Enumerated(EnumType.STRING)
+    private GuideCategory category;
 
     //mapping
     @OneToMany(mappedBy="guide")
@@ -46,4 +47,25 @@ public class Guide extends BaseEntity {
 
     @OneToMany(mappedBy="guide")
     private List<GuideStore> guideStore =new ArrayList<>();
+
+
+    public void increaseLikeCount() {
+        this.likeCount++;
+    }
+
+    public void decreaseLikeCount() {
+        if (this.likeCount > 0) {
+            this.likeCount--;
+        }
+    }
+
+    public void increaseStoreCount() {
+        this.storeCount++;
+    }
+
+    public void decreaseStoreCount() {
+        if (this.storeCount > 0) {
+            this.storeCount--;
+        }
+    }
 }

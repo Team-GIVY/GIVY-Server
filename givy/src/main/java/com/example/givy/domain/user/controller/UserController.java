@@ -7,6 +7,7 @@ import com.example.givy.domain.user.service.command.UserCommandService;
 import com.example.givy.domain.user.service.query.UserQueryService;
 import com.example.givy.global.apiPayLoad.ApiResponse;
 import com.example.givy.global.security.CustomPrincipal;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,7 @@ public class UserController implements UserControllerDocs {
     /* 01-01 회원가입 API */
     @PostMapping("/signup")
     public ApiResponse<UserResDTO.UserInfoDTO> SignUp(
-            @RequestBody UserReqDTO.UserSignupDTO request
+            @RequestBody @Valid UserReqDTO.UserSignupDTO request
     ){
         return ApiResponse.onSuccess(UserSuccessCode.USER_SIGNUP_CREATED, userCommandService.signup(request));
     }
@@ -30,13 +31,25 @@ public class UserController implements UserControllerDocs {
     /* 01-02 로그인 API */
     @PostMapping("/login")
     public ApiResponse<UserResDTO.UserLoginResDTO> Login(
-        @RequestBody UserReqDTO.UserLoginDTO request
+        @RequestBody @Valid UserReqDTO.UserLoginDTO request
     ){
         return ApiResponse.onSuccess(UserSuccessCode.USER_LOGIN_SUCCESS, userCommandService.login(request));
     }
 
-    /* 01-03 내 정보 조회 API */
-    @GetMapping("/me")
+
+    /* 01-04 소셜 회원가입(프로필 완성 단계) */
+    @PostMapping("/social/signup")
+    public ApiResponse<?> SocialSignup(
+            @AuthenticationPrincipal CustomPrincipal principal,
+            @RequestBody @Valid UserReqDTO.UserProfileDTO request
+    ){
+        userCommandService.socialSignup(principal.getUserId(), request);
+        return ApiResponse.onSuccess(UserSuccessCode.USER_SOCIAL_SIGNUP_CREATED);
+    }
+
+
+    /* 01-05 내 정보 조회 API */
+    @GetMapping("/users/me")
     public ApiResponse<UserResDTO.UserDetailDTO> getUserInfo(
             @AuthenticationPrincipal CustomPrincipal principal
     ){
