@@ -4,6 +4,7 @@ import com.example.givy.domain.notification.enums.NotificationType;
 import com.example.givy.domain.user.entity.UserNotification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -24,7 +25,7 @@ public interface UserNotificationRepository extends JpaRepository<UserNotificati
     Page<UserNotification> findAllByUserIdAndOptionalIsRead(
             @Param("userId") Long userId,
             @Param("isRead") Boolean isRead,
-            PageRequest pageRequest
+            Pageable pageable
     );
 
     Optional<UserNotification> findByUserNotificationId(Long userNotificationId);

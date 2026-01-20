@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserNotificationCommandServiceImpl implements UserNotificationCommandService {
     private final UserNotificationRepository userNotificationRepository;
 
+    /* 07-02 사용자 알림 읽음 처리 */
     @Override
     @Transactional
     public UserNotificationResDTO.ReadUserNotification readNotification(Long userId, Long userNotificationId) {

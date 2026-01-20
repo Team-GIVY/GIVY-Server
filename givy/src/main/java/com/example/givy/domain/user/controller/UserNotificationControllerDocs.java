@@ -1,6 +1,5 @@
 package com.example.givy.domain.user.controller;
 
-import com.example.givy.domain.user.dto.req.UserNotificationReqDTO;
 import com.example.givy.domain.user.dto.res.UserNotificationResDTO;
 import com.example.givy.global.apiPayLoad.ApiResponse;
 import com.example.givy.global.security.CustomPrincipal;
@@ -9,7 +8,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,7 +30,9 @@ public interface UserNotificationControllerDocs {
     @GetMapping()
     ApiResponse<UserNotificationResDTO.UserNotificationInfoListDTO> getUserNotifications(
             @AuthenticationPrincipal CustomPrincipal principal,
-            @RequestBody @Valid UserNotificationReqDTO.UserNotificationListParamDTO dto
+            @RequestParam(defaultValue = "0", required = false) int page,
+            @RequestParam(defaultValue = "20", required = false) int size,
+            @RequestParam(required = false) Boolean isRead
     );
 
 
