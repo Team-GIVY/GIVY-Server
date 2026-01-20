@@ -17,7 +17,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -80,9 +82,16 @@ public class UserCommandServiceImpl implements UserCommandService {
     public UserSecuritiesResDTO.UserSecuritiesListDTO registerSecurities(Long userId, UserSecuritiesReqDTO.RegisterSecuritiesDTO dto) {
         Users user = userRepository.findById(userId).orElseThrow(() -> new UserException(UserErrorCode.USER_ID_NOT_FOUND));
 
-        List<UserSecuritiesAccount> userSecuritiesEntity = UserConverter.toUserSecuritiesEntity(user, dto);
+        List<UserSecuritiesAccount> newSecurities = dto.getSecuritiesList().stream() // DTO 내부 리스트 이름에 맞춰 수정
+                .filter(security -> !userSecuritiesRepository.existsByUsers_UserIdAndSecuritiesName(userId, security))
+                .map(security -> UserConverter.toUserSecuritiesEntity(user, security))
+                .toList();
 
-        List<UserSecuritiesAccount> saved = userSecuritiesRepository.saveAll(userSecuritiesEntity);
+        if (newSecurities.isEmpty()) {
+            return UserConverter.toUserSecuritiesListDTO(Collections.emptyList());
+        }
+
+        List<UserSecuritiesAccount> saved = userSecuritiesRepository.saveAll(newSecurities);
 
         return UserConverter.toUserSecuritiesListDTO(saved);
     }

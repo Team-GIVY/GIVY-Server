@@ -20,6 +20,7 @@ public class StartChallenge extends BaseEntity {
     private Long startChallengeId;
 
     @Column(name="status")
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     //mapping

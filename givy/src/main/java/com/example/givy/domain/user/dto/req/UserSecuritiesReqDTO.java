@@ -11,6 +11,6 @@ public class UserSecuritiesReqDTO {
     @Builder
     public static class RegisterSecuritiesDTO {
         @NotNull
-        private List<String> securities;
+        private List<String> securitiesList;
     }
 }

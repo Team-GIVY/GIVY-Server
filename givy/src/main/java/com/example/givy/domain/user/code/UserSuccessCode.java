@@ -15,7 +15,9 @@ public enum UserSuccessCode implements BaseSuccessCode {
     USER_FETCH_SUCCESS(HttpStatus.OK, "USER200_2", "유저 정보 조회 성공"),
 
     USER_SECURITIES_CREATED(HttpStatus.CREATED, "USER201_2", "증권 계좌 등록이 완료되었습니다."),
-    USER_ADULT_CHECK_SUCCESS(HttpStatus.OK, "USER200_3", "성인 여부 검증이 완료되었습니다.");
+    SOME_USER_SECURITIES_CREATED(HttpStatus.CREATED, "USER201_3", "이미 등록된 계좌를 제외하고 계좌 등록을 완료했습니다."),
+    USER_SECURITIES_ALREADY_CREATED(HttpStatus.OK, "USER200_3", "이미 등록된 계좌입니다."),
+    USER_ADULT_CHECK_SUCCESS(HttpStatus.OK, "USER200_4", "성인 여부 검증이 완료되었습니다.");
 
     private final HttpStatus status;
     private final String code;

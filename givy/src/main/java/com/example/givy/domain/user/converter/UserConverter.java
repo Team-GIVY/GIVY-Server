@@ -54,13 +54,20 @@ public class UserConverter {
     }
 
     // RegisterSecuritiesAccountDTO -> Entity
-    public static List<UserSecuritiesAccount> toUserSecuritiesEntity(Users user, UserSecuritiesReqDTO.RegisterSecuritiesDTO dto) {
-        return dto.getSecurities().stream()
+    public static List<UserSecuritiesAccount> toUserSecuritiesListEntity(Users user, UserSecuritiesReqDTO.RegisterSecuritiesDTO dto) {
+        return dto.getSecuritiesList().stream()
                 .map(name -> UserSecuritiesAccount.builder()
                         .securitiesName(name)
                         .users(user)
                         .build())
                 .toList();
+    }
+
+    public static UserSecuritiesAccount toUserSecuritiesEntity(Users user, String securityName) {
+        return UserSecuritiesAccount.builder()
+                .securitiesName(securityName)
+                .users(user)
+                .build();
     }
 
     //Entity -> UserSecuritiesListDTO
