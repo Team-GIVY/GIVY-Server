@@ -15,7 +15,7 @@ public class Stamp {
     @Column(name="stamp_id")
     private Long stampId;
 
-    @Column(name="name", nullable = false)
+    @Column(name="name", nullable = false, unique = true)
     private String name;
 
     @Column(name="image_url", nullable = false)

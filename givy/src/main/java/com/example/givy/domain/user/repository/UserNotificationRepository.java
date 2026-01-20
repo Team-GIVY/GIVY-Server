@@ -1,5 +1,6 @@
 package com.example.givy.domain.user.repository;
 
+import com.example.givy.domain.notification.enums.NotificationType;
 import com.example.givy.domain.user.entity.UserNotification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,6 +13,11 @@ import java.util.Optional;
 
 @Repository
 public interface UserNotificationRepository extends JpaRepository<UserNotification, Long> {
+    boolean existsByUsers_UserIdAndNotification_NotificationType(
+            Long userId,
+            NotificationType notificationType
+    );
+
     @Query("SELECT un FROM UserNotification un " +
             "WHERE un.users.userId = :userId " +
             "AND (:isRead IS NULL OR un.isRead = :isRead)")

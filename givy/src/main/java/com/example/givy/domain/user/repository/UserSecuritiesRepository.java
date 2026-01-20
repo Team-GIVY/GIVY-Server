@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserSecuritiesRepository extends JpaRepository<UserSecuritiesAccount, Long> {
-
+    boolean existsByUsers_UserIdAndSecuritiesName(Long userId, String securitiesName);
 }

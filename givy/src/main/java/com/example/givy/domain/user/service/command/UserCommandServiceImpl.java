@@ -17,7 +17,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -61,14 +63,35 @@ public class UserCommandServiceImpl implements UserCommandService {
         return UserConverter.toLoginDTO(token, user);
     }
 
+    /* 01-04 소셜 회원가입(프로필 완성 단계) */
+    @Override
+    public void socialSignup(Long userId, UserReqDTO.UserProfileDTO dto){
+        Users user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserException(UserErrorCode.USER_ID_NOT_FOUND));
+
+        //OauthUserService에서 카카오로 로그인한 유저 미리 하드코딩으로 NOTNULL 데이터들 넣어줬음. 다시 덮어씌우기.
+        //이미 생성된 entity를 userId기준으로 찾았음.
+        user.completeSocialProfile(dto);
+
+        // db 저장 끝.
+        userRepository.save(user);
+    }
+
     /* 06-01 증권 계좌 등록 */
     @Override
     public UserSecuritiesResDTO.UserSecuritiesListDTO registerSecurities(Long userId, UserSecuritiesReqDTO.RegisterSecuritiesDTO dto) {
         Users user = userRepository.findById(userId).orElseThrow(() -> new UserException(UserErrorCode.USER_ID_NOT_FOUND));
 
-        List<UserSecuritiesAccount> userSecuritiesEntity = UserConverter.toUserSecuritiesEntity(user, dto);
+        List<UserSecuritiesAccount> newSecurities = dto.getSecuritiesList().stream() // DTO 내부 리스트 이름에 맞춰 수정
+                .filter(security -> !userSecuritiesRepository.existsByUsers_UserIdAndSecuritiesName(userId, security))
+                .map(security -> UserConverter.toUserSecuritiesEntity(user, security))
+                .toList();
 
-        List<UserSecuritiesAccount> saved = userSecuritiesRepository.saveAll(userSecuritiesEntity);
+        if (newSecurities.isEmpty()) {
+            return UserConverter.toUserSecuritiesListDTO(Collections.emptyList());
+        }
+
+        List<UserSecuritiesAccount> saved = userSecuritiesRepository.saveAll(newSecurities);
 
         return UserConverter.toUserSecuritiesListDTO(saved);
     }

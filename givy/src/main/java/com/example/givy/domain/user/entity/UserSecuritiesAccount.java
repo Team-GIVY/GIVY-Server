@@ -1,6 +1,5 @@
 package com.example.givy.domain.user.entity;
 
-
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;

@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -18,14 +20,11 @@ public class StartChallengeQueryServiceImpl implements StartChallengeQueryServic
     private final StartChallengeRepository startChallengeRepository;
 
     @Override
-    public StartChallengeResDTO.StartChallengeStatusDTO getChallengeStatus(Long userId) {
-        StartChallenge challenge = startChallengeRepository.findByUsers_UserId(userId)
-                .orElseThrow(() -> new StartChallengeException(StartChallengeErrorCode.USER_CHALLENGE_NOT_FOUND));
+    public List<StartChallengeResDTO.StartChallengeStatusDTO> getChallengeStatus(Long userId) {
+        List<StartChallenge> allByUserId = startChallengeRepository.findAllByUsers_UserId(userId);
 
-        if(challenge.getStatus().equals(Status.IN_PROGRESS)){
-            return StartChallengeConverter.toStartChallengeStatusDTO(challenge);
-        }
-
-        return null;
+        return allByUserId.stream()
+                .map(startChallenge -> StartChallengeConverter.toStartChallengeStatusDTO(startChallenge))
+                .toList();
     }
 }

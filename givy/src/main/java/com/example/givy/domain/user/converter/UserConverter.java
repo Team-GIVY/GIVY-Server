@@ -19,7 +19,9 @@ public class UserConverter {
         return Users.builder()
                 .email(dto.getEmail())
                 .password(encodedPw)
-                .name(dto.getUsername())
+                .name(dto.getName())
+                .nickname(dto.getNickname())
+                .language(dto.getLanguage())
                 .role(Role.USER)
                 .build();
     }
@@ -52,13 +54,20 @@ public class UserConverter {
     }
 
     // RegisterSecuritiesAccountDTO -> Entity
-    public static List<UserSecuritiesAccount> toUserSecuritiesEntity(Users user, UserSecuritiesReqDTO.RegisterSecuritiesDTO dto) {
-        return dto.getSecurities().stream()
+    public static List<UserSecuritiesAccount> toUserSecuritiesListEntity(Users user, UserSecuritiesReqDTO.RegisterSecuritiesDTO dto) {
+        return dto.getSecuritiesList().stream()
                 .map(name -> UserSecuritiesAccount.builder()
                         .securitiesName(name)
                         .users(user)
                         .build())
                 .toList();
+    }
+
+    public static UserSecuritiesAccount toUserSecuritiesEntity(Users user, String securityName) {
+        return UserSecuritiesAccount.builder()
+                .securitiesName(securityName)
+                .users(user)
+                .build();
     }
 
     //Entity -> UserSecuritiesListDTO

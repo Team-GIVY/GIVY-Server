@@ -18,6 +18,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/start-challenge")
@@ -34,7 +36,20 @@ public class StartChallengeController implements StartChallengeControllerDocs {
             @AuthenticationPrincipal CustomPrincipal principal,
             @RequestBody @Valid UserSecuritiesReqDTO.RegisterSecuritiesDTO dto
     ) {
-        return ApiResponse.onSuccess(UserSuccessCode.USER_SECURITIES_CREATED, userCommandService.registerSecurities(principal.getUserId(), dto));
+        UserSecuritiesResDTO.UserSecuritiesListDTO securities = userCommandService.registerSecurities(principal.getUserId(), dto);
+
+        //요청된 계좌 모두가 이미 등록된 경우
+        if(securities.getSecuritiesList().isEmpty()){
+            return ApiResponse.onSuccess(UserSuccessCode.USER_SECURITIES_ALREADY_CREATED, null);
+        }
+
+        //요청된 계좌 일부가 등록된 경우
+        if(securities.getSecuritiesList().size() < dto.getSecuritiesList().size()){
+            return ApiResponse.onSuccess(UserSuccessCode.SOME_USER_SECURITIES_CREATED, securities);
+        }
+        
+        //계좌 모두가 등록되지 않은 경우
+        return ApiResponse.onSuccess(UserSuccessCode.USER_SECURITIES_CREATED, securities);
     }
 
     /* 06-02 성인 여부 판단 */
@@ -55,18 +70,23 @@ public class StartChallengeController implements StartChallengeControllerDocs {
     /* 06-04 스타트 챌린지 완료 */
     @PatchMapping("/{startChallengeId}")
     public ApiResponse<StartChallengeResDTO.StartChallengeInfoDTO> completeChallenge(
-            @PathVariable Long startChallengeId,
-            @AuthenticationPrincipal CustomPrincipal principal
+            @AuthenticationPrincipal CustomPrincipal principal,
+            @PathVariable(name = "startChallengeId") Long startChallengeId
     ){
-        return ApiResponse.onSuccess(StartChallengeSuccessCode.START_CHALLENGE_COMPLETED, startChallengeCommandService.completeChallenge(principal.getUserId(), startChallengeId));
+        StartChallengeResDTO.StartChallengeInfoDTO result = startChallengeCommandService.completeChallenge(principal.getUserId(), startChallengeId);
+
+        if(result == null) {
+            return ApiResponse.onSuccess(StartChallengeSuccessCode.START_CHALLENGE_COMPLETED, null);
+        }
+
+        return ApiResponse.onSuccess(StartChallengeSuccessCode.START_CHALLENGE_COMPLETED, result);
     }
 
     /* 06-05 스타트 챌린지 상태 조회 */
     @GetMapping()
-    public ApiResponse<StartChallengeResDTO.StartChallengeStatusDTO> getChallengeStatus(
+    public ApiResponse<List<StartChallengeResDTO.StartChallengeStatusDTO>> getChallengeStatus(
             @AuthenticationPrincipal CustomPrincipal principal){
-
-        StartChallengeResDTO.StartChallengeStatusDTO result = startChallengeQueryService.getChallengeStatus(principal.getUserId());
+        List<StartChallengeResDTO.StartChallengeStatusDTO> result = startChallengeQueryService.getChallengeStatus(principal.getUserId());
 
         if(result == null){
             return ApiResponse.onSuccess(StartChallengeSuccessCode.START_CHALLENGE_NOT_FOUND, null);

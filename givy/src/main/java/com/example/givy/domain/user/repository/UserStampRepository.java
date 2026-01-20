@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserStampRepository extends JpaRepository<UserStamp, Long> {
-    boolean findByUsers_UserId(Long userId);
+    boolean existsByUsers_UserId(Long userId);
 }

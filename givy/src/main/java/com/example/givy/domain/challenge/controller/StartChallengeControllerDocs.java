@@ -16,6 +16,8 @@ import jakarta.validation.Valid;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Tag(name = "06 Start Challenge", description = "06번대 스타트챌린지 API")
 public interface StartChallengeControllerDocs {
 
@@ -47,7 +49,7 @@ public interface StartChallengeControllerDocs {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(
                     responseCode = "200",
-                    description = "성인 여부 판단 성공 (USER200_3)",
+                    description = "성인 여부 판단 성공 (USER200_4)",
                     content = @Content(schema = @Schema(implementation = UserResDTO.AgeVerificationResDTO.class))
             )
     })
@@ -88,9 +90,9 @@ public interface StartChallengeControllerDocs {
             )
     })
     @PatchMapping("/{startChallengeId}")
-    ApiResponse<StartChallengeResDTO.StartChallengeInfoDTO> completeChallenge(
-            @PathVariable Long startChallengeId,
-            @AuthenticationPrincipal CustomPrincipal principal
+    public ApiResponse<StartChallengeResDTO.StartChallengeInfoDTO> completeChallenge(
+            @AuthenticationPrincipal CustomPrincipal principal,
+            @PathVariable Long startChallengeId
     );
 
     /* 06-05 스타트 챌린지 상태 조회 */
@@ -107,6 +109,6 @@ public interface StartChallengeControllerDocs {
             )
     })
     @GetMapping()
-    ApiResponse<StartChallengeResDTO.StartChallengeStatusDTO> getChallengeStatus(@AuthenticationPrincipal CustomPrincipal principal);
+    ApiResponse<List<StartChallengeResDTO.StartChallengeStatusDTO>> getChallengeStatus(@AuthenticationPrincipal CustomPrincipal principal);
 
 }
