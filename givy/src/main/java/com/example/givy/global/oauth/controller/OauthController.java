@@ -7,7 +7,9 @@ package com.example.givy.global.oauth.controller;
 
 import com.example.givy.global.apiPayLoad.ApiResponse;
 import com.example.givy.global.apiPayLoad.code.OauthSuccessCode;
+import com.example.givy.global.oauth.model.GoogleUserInfo;
 import com.example.givy.global.oauth.model.KakaoUserInfo;
+import com.example.givy.global.oauth.service.GoogleOauthService;
 import com.example.givy.global.oauth.service.KakaoOauthService;
 import com.example.givy.global.oauth.service.OauthUserService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -22,6 +24,7 @@ import java.io.IOException;
 public class OauthController {
 
     private final KakaoOauthService kakaoOauthService;
+    private final GoogleOauthService googleOauthService;
     private final OauthUserService oauthUserService;
 
     /**
@@ -49,5 +52,19 @@ public class OauthController {
         String jwt = oauthUserService.handleKakaoUser(kakaoUser);
 
         return ApiResponse.onSuccess(OauthSuccessCode.KAKAO_LOGIN_SUCCESS, jwt);
+    }
+
+    @GetMapping("/google/login")
+    public void redirectToGoogle(HttpServletResponse response) throws IOException {
+        response.sendRedirect(googleOauthService.generateGoogleLoginUrl());
+    }
+
+    @GetMapping("/google/callback")
+    public ApiResponse<String> googleCallback(@RequestParam("code") String code) {
+        GoogleUserInfo googleUser = googleOauthService.fetchGoogleUser(code);
+
+        String jwt = oauthUserService.handleGoogleUser(googleUser);
+
+        return ApiResponse.onSuccess(OauthSuccessCode.GOOGLE_LOGIN_SUCCESS, jwt);
     }
 }
