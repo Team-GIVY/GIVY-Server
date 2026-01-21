@@ -54,7 +54,7 @@ public class SecurityConfig {
         //4. URL 인가 규칙 설정
         http.authorizeHttpRequests(auth -> auth
                         // 회원가입 / 로그인 허용
-                        .requestMatchers("/auth/signup", "/auth/login").permitAll()
+                        .requestMatchers("/auth/signup", "/auth/login","/auth/refresh").permitAll()
 
                         // 정적 파일 허용
                         .requestMatchers("/", "/index.html", "/css/**", "/js/**", "/images/**").permitAll()

@@ -60,4 +60,20 @@ public class UserReqDTO {
 
     }
 
+    @Getter
+    @Builder
+    public static class UserLogoutDTO{
+        @NotNull
+        private String refreshToken;
+    }
+
+    @Getter
+    @Builder
+    public static class UserTokenRefreshDTO {
+
+        @NotNull
+        private String refreshToken;
+    }
+
+
 }
