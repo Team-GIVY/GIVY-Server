@@ -1,0 +1,11 @@
+package com.example.givy.domain.recommendation.repository;
+
+import com.example.givy.domain.recommendation.entity.Tendency;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
+
+public interface TendencyRepository extends JpaRepository<Tendency, Long> {
+
+    Optional<Tendency> findTopByUsers_UserIdOrderByCreatedAtDesc(Long userId);
+}

@@ -3,7 +3,7 @@ package com.example.givy.domain.user.service.query;
 import com.example.givy.domain.user.code.UserErrorCode;
 import com.example.givy.domain.user.converter.UserConverter;
 import com.example.givy.domain.user.dto.res.UserResDTO;
-import com.example.givy.domain.user.entity.User;
+import com.example.givy.domain.user.entity.Users;
 import com.example.givy.domain.user.exception.UserException;
 import com.example.givy.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,11 +17,11 @@ public class UserQueryServiceImpl implements UserQueryService {
 
     private final UserRepository userRepository;
 
-    /* 01-03 내 정보 조회 API */
+    /* 01-05 내 정보 조회 API */
     @Override
     public UserResDTO.UserDetailDTO getUserInfo(Long userId) {
 
-        User user = userRepository.findById(userId)
+        Users user = userRepository.findById(userId)
                 .orElseThrow(()-> new UserException(UserErrorCode.USER_ID_NOT_FOUND));
 
         return UserConverter.toDetailDTO(user);
