@@ -17,6 +17,7 @@ public class UserConverter {
                 .email(dto.getEmail())
                 .password(encodedPw)
                 .name(dto.getName())
+                .birthDate(dto.getBirthDate())
                 .nickname(dto.getNickname())
                 .language(dto.getLanguage())
                 .role(Role.USER)

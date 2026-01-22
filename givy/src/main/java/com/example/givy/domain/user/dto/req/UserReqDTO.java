@@ -1,10 +1,13 @@
 package com.example.givy.domain.user.dto.req;
 
 import com.example.givy.domain.user.enums.Language;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.time.LocalDate;
 
 public class UserReqDTO {
 
@@ -40,6 +43,10 @@ public class UserReqDTO {
         @NotNull
         private Language language;
 
+        @NotNull
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        private LocalDate birthDate;
+
     }
 
     @Getter
@@ -54,6 +61,10 @@ public class UserReqDTO {
 
         @NotNull
         private Language language;
+
+        @NotNull
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        private LocalDate birthDate;
 
         @NotNull
         private String profileImageUrl;
