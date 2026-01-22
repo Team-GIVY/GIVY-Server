@@ -16,8 +16,18 @@ springdoc:
 
 oauth:
   kakao:
+    client-secret: ${KAKAO_CLIENT_SECRET:MISSING}
     client-id: 0283c27599aef19ed65bcde74a5cb98b
     authorize-uri: https://kauth.kakao.com/oauth/authorize
     redirect-uri: http://localhost:8080/oauth/kakao/callback
     token-uri: https://kauth.kakao.com/oauth/token
     user-info-uri: https://kapi.kakao.com/v2/user/me
+
+#한국 투자 증권 API
+
+kis:
+  api:
+    # .env를 못 읽으면 "MISSING"이라는 글자가 들어감
+    app-key: ${KIS_API_APP_KEY}
+    app-secret: ${KIS_API_APP_SECRET}
+    url: ${KIS_API_URL:https://openapi.koreainvestment.com:9443}
