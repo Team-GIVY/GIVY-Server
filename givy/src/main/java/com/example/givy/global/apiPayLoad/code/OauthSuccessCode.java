@@ -9,7 +9,8 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum OauthSuccessCode implements BaseSuccessCode {
 
-    KAKAO_LOGIN_SUCCESS(HttpStatus.OK, "OAUTH200_1","카카오 로그인 성공");
+    KAKAO_LOGIN_SUCCESS(HttpStatus.OK, "OAUTH200_1","카카오 로그인 성공"),
+    GOOGLE_LOGIN_SUCCESS(HttpStatus.OK, "OAUTH200_2","구글 로그인 성공");
 
     private final HttpStatus status;
     private final String code;

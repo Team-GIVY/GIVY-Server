@@ -22,6 +22,13 @@ oauth:
     token-uri: https://kauth.kakao.com/oauth/token
     user-info-uri: https://kapi.kakao.com/v2/user/me
     client-secret: ${CLIENT_SECRET}
+  google: # /oauth2/authorization/google
+    client-id: ${GOOGLE_CLIENT_ID}
+    client-secret: ${GOOGLE_CLIENT_SECRET}
+    redirect-uri: http://localhost:8080/oauth/google/callback # (프론트 또는 백엔드 처리 방식에 따라 다름)
+    token-uri: https://oauth2.googleapis.com/token
+    user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
+    authorize-uri: https://accounts.google.com/o/oauth2/v2/auth
 
 #한국 투자 증권 API
 kis:

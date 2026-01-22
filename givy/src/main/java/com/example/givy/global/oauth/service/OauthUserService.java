@@ -9,6 +9,7 @@ import com.example.givy.domain.user.entity.Users;
 import com.example.givy.domain.user.enums.Language;
 import com.example.givy.domain.user.enums.Role;
 import com.example.givy.domain.user.repository.UserRepository;
+import com.example.givy.global.oauth.model.GoogleUserInfo;
 import com.example.givy.global.oauth.model.KakaoUserInfo;
 import com.example.givy.global.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +37,28 @@ public class OauthUserService {
     private Users createKakaoUser(KakaoUserInfo info){
 
         String encodedPassword = passwordEncoder.encode("kakao_oauth_placeholder");
+
+        Users user = Users.builder()
+                .email(info.getEmail())
+                .password(encodedPassword)
+                .name("프로필을 완성해주세요")
+                .nickname(info.getNickname())
+                .role(Role.USER)
+                .language(Language.KO)
+                .build();
+
+        return userRepository.save(user);
+    }
+
+    public String handleGoogleUser(GoogleUserInfo info){
+        Users user = userRepository.findByEmail(info.getEmail())
+                .orElseGet(() -> createGoogleUser(info));
+
+        return jwtTokenProvider.createToken(user.getUserId(), user.getRole());
+    }
+
+    private Users createGoogleUser(GoogleUserInfo info){
+        String encodedPassword = passwordEncoder.encode("google_oauth_placeholder");
 
         Users user = Users.builder()
                 .email(info.getEmail())
