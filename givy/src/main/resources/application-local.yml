@@ -1,3 +1,6 @@
+server:
+  port: 8081
+
 spring:
   config:
     activate:
@@ -14,7 +17,3 @@ spring:
   jwt:
     secret: ${JWT_SECRET:local_test_secret_key_1234567890}
     expiration-ms: 3600000
-
-oauth:
-  kakao:
-    client-secret: ${CLIENT_SECRET}

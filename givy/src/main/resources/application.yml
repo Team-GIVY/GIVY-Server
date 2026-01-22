@@ -29,3 +29,10 @@ oauth:
     token-uri: https://oauth2.googleapis.com/token
     user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
     authorize-uri: https://accounts.google.com/o/oauth2/v2/auth
+
+#한국 투자 증권 API
+kis:
+  api:
+    app-key: ${KIS_API_APP_KEY}
+    app-secret: ${KIS_API_APP_SECRET}
+    url: ${KIS_API_URL:https://openapi.koreainvestment.com:9443}
