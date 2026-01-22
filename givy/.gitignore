@@ -43,6 +43,7 @@ out/
 .env.local
 .env.dev
 .env.prod
+kis_token.json
 application-prod.yml
 application-secrets.yml
 *-secrets.yml

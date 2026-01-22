@@ -29,6 +29,18 @@ public class KisMarketService {
     @Value("${kis.api.app-secret}")
     private String appSecret;
 
+    // 공통 URL 정리 메서드
+    private String getCleanBaseUrl() {
+        String cleanUrl = baseUrl;
+        if (cleanUrl.endsWith("/")) {
+            cleanUrl = cleanUrl.substring(0, cleanUrl.length() - 1);
+        }
+        if (cleanUrl.endsWith("/oauth2/tokenP")) {
+            cleanUrl = cleanUrl.substring(0, cleanUrl.length() - "/oauth2/tokenP".length());
+        }
+        return cleanUrl;
+    }
+
     // 국내 휴장일 조회 API (국내주식-040)
     public boolean isMarketOpen(LocalDate date) {
         String token = kisAuthService.getStoredToken();
@@ -37,11 +49,9 @@ public class KisMarketService {
         log.info("휴장일 조회 요청: {}", dateString);
 
         try {
-            // baseUrl 처리 (끝에 /가 있으면 제거)
-            String cleanBaseUrl = baseUrl.endsWith("/") ? baseUrl.substring(0, baseUrl.length() - 1) : baseUrl;
-            String fullPath = cleanBaseUrl + "/uapi/domestic-stock/v1/quotations/chk-holiday";
+            String path = "/uapi/domestic-stock/v1/quotations/chk-holiday";
 
-            URI uri = UriComponentsBuilder.fromHttpUrl(fullPath)
+            URI uri = UriComponentsBuilder.fromHttpUrl(getCleanBaseUrl() + path)
                     .queryParam("BASS_DT", dateString)
                     .queryParam("CTX_AREA_NK", "")
                     .queryParam("CTX_AREA_FK", "")
