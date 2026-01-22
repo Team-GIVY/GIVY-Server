@@ -19,6 +19,9 @@ public enum UserErrorCode implements BaseErrorCode {
             "본인 소유의 Refresh Token이 아닙니다."
     ),
     USER_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "USER404_2", "해당 id의 유저를 찾을 수 없습니다.");
+    USER_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "USER404_2", "해당 id의 유저를 찾을 수 없습니다."),
+    USER_SECURITIES_ACCOUNT_NOT_FOUND(HttpStatus.NOT_FOUND, "USER404_3", "사용자의 증권 계좌 정보를 찾을 수 없습니다.");
+
 
     private final HttpStatus status;
     private final String code;

@@ -11,7 +11,9 @@ import com.example.givy.domain.user.entity.Users;
 import com.example.givy.global.apiPayLoad.ApiResponse;
 import com.example.givy.global.apiPayLoad.code.OauthSuccessCode;
 import com.example.givy.global.auth.service.RefreshTokenProvider;
+import com.example.givy.global.oauth.model.GoogleUserInfo;
 import com.example.givy.global.oauth.model.KakaoUserInfo;
+import com.example.givy.global.oauth.service.GoogleOauthService;
 import com.example.givy.global.oauth.service.KakaoOauthService;
 import com.example.givy.global.oauth.service.OauthUserService;
 import com.example.givy.global.security.JwtTokenProvider;
@@ -27,6 +29,7 @@ import java.io.IOException;
 public class OauthController {
 
     private final KakaoOauthService kakaoOauthService;
+    private final GoogleOauthService googleOauthService;
     private final OauthUserService oauthUserService;
     private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenProvider refreshTokenProvider;
@@ -67,5 +70,19 @@ public class OauthController {
                 OauthSuccessCode.KAKAO_LOGIN_SUCCESS,
                 UserConverter.toLoginDTO(accessToken, refreshToken, user)
         );
+    }
+
+    @GetMapping("/google/login")
+    public void redirectToGoogle(HttpServletResponse response) throws IOException {
+        response.sendRedirect(googleOauthService.generateGoogleLoginUrl());
+    }
+
+    @GetMapping("/google/callback")
+    public ApiResponse<String> googleCallback(@RequestParam("code") String code) {
+        GoogleUserInfo googleUser = googleOauthService.fetchGoogleUser(code);
+
+        String jwt = oauthUserService.handleGoogleUser(googleUser);
+
+        return ApiResponse.onSuccess(OauthSuccessCode.GOOGLE_LOGIN_SUCCESS, jwt);
     }
 }
