@@ -22,3 +22,10 @@ oauth:
     token-uri: https://kauth.kakao.com/oauth/token
     user-info-uri: https://kapi.kakao.com/v2/user/me
     client-secret: ${CLIENT_SECRET}
+
+#한국 투자 증권 API
+kis:
+  api:
+    app-key: ${KIS_API_APP_KEY}
+    app-secret: ${KIS_API_APP_SECRET}
+    url: ${KIS_API_URL:https://openapi.koreainvestment.com:9443}
