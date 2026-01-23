@@ -34,44 +34,40 @@ public class NotificationCommandServiceImpl implements NotificationCommandServic
 
     /* 마켓 오픈 시 푸시 알림 전송 */
     @Transactional()
-    public void sendMarketOpenPush() {
+    public void sendMarketOpenPush(MarketCode marketCode) {
         Notification notification = notificationRepository.findByNotificationType(NotificationType.MARKET_OPEN)
                 .orElseThrow(() -> new NotificationException(NotificationErrorCode.NOTIFICATION_TYPE_NOT_FOUND));
 
-        for (MarketCode market : MarketCode.values()) {
-            //마켓 오픈 여부 확인
-            if (!marketHolidayQueryService.isMarketOpenToday(market)) continue;
+        //마켓 오픈 여부 확인
+        if (!marketHolidayQueryService.isMarketOpenToday(marketCode)) return;
 
-            List<UserDeviceToken> targets = userDeviceRepository.findAllByEnabledNotification(NotificationType.MARKET_OPEN);
+        List<UserDeviceToken> targets = userDeviceRepository.findAllByEnabledNotification(NotificationType.MARKET_OPEN);
 
-            if (targets.isEmpty()) {
-                log.info("발송 대상 유저가 존재하지 않아 알림 발송을 중단합니다. (Type: {})", NotificationType.CHALLENGE);
-                continue;
-            }
-
-            List<String> tokens = targets.stream()
-                    .map(UserDeviceToken::getDeviceToken)
-                    .toList();
-
-            List<Users> users = targets.stream()
-                    .map(UserDeviceToken::getUsers)
-                    .toList();
-
-
-            MultiNotificationRequest request = MultiNotificationRequest.of(tokens, notification.getTitle(), notification.getBody());
-
-            fcmNotificationService.sendMessage(request);
-
-            List<UserNotification> entities = targets.stream()
-                    .map(target -> UserNotificationConverter.toEntity(notification, target.getUsers(), target)
-                    ).toList();
-
-            userNotificationRepository.saveAll(entities);
-            
-            //db의 localdate 값과 비교해서 하루에 하나만 보내지게
-
-            log.info("[{}] 시장 알림 발송 성공 - {}명 대상", market, entities.size());
+        if (targets.isEmpty()) {
+            log.info("발송 대상 유저가 존재하지 않아 알림 발송을 중단합니다. (Type: {})", NotificationType.CHALLENGE);
+            return;
         }
+
+        List<String> tokens = targets.stream()
+                .map(UserDeviceToken::getDeviceToken)
+                .toList();
+
+        List<Users> users = targets.stream()
+                .map(UserDeviceToken::getUsers)
+                .toList();
+
+
+        MultiNotificationRequest request = MultiNotificationRequest.of(tokens, notification.getTitle(), notification.getBody());
+
+        fcmNotificationService.sendMessage(request);
+
+        List<UserNotification> entities = targets.stream()
+                .map(target -> UserNotificationConverter.toEntity(notification, target.getUsers(), target)
+                ).toList();
+
+        userNotificationRepository.saveAll(entities);
+
+        log.info("[{}] 시장 알림 발송 성공 - {}명 대상", marketCode, entities.size());
 
     }
 

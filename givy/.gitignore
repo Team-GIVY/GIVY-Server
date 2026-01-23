@@ -61,4 +61,4 @@ Thumbs.db
 .history/
 
 # Firebase Admin SDK private key
-**/resources/firebase/givy-firebase.json
+**/resources/firebase/givy-fcm.json

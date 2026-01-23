@@ -1,5 +1,6 @@
 package com.example.givy.domain.notification.scheduler;
 
+import com.example.givy.domain.commerce.enums.MarketCode;
 import com.example.givy.domain.notification.service.command.NotificationCommandService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +21,7 @@ public class NotificationScheduler {
 //    @Scheduled(cron = "0 * * * * *", zone = "Asia/Seoul")   //Scheduler test
     public void scheduleKoreaMarketOpen() {
         log.info("한국 시장 개장 알림 스케줄러 실행");
-        notificationCommandService.sendMarketOpenPush();
+        notificationCommandService.sendMarketOpenPush(MarketCode.KR);
     }
 
     /**
@@ -30,6 +31,6 @@ public class NotificationScheduler {
     @Scheduled(cron = "0 30 22 * * MON-FRI", zone = "Asia/Seoul")
     public void scheduleUSMarketOpen() {
         log.info("미국 시장 개장 알림 스케줄러 실행");
-        notificationCommandService.sendMarketOpenPush();
+        notificationCommandService.sendMarketOpenPush(MarketCode.US);
     }
 }
