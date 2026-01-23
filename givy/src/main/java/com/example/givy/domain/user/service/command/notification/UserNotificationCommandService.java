@@ -1,4 +1,4 @@
-package com.example.givy.domain.user.service.command;
+package com.example.givy.domain.user.service.command.notification;
 
 import com.example.givy.domain.user.dto.res.UserNotificationResDTO;
 

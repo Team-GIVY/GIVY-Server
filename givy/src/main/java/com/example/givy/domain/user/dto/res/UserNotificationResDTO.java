@@ -4,6 +4,7 @@ import com.example.givy.domain.notification.enums.NotificationType;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class UserNotificationResDTO {
         private String targetId;
         private Boolean isRead;
         private LocalDateTime deliveredAt;
-        private LocalDateTime createdAt;
+        private LocalDate createdAt;
     }
 
     @Getter

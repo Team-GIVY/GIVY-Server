@@ -3,23 +3,15 @@ package com.example.givy.domain.user.service.command;
 import com.example.givy.domain.user.code.UserErrorCode;
 import com.example.givy.domain.user.converter.UserConverter;
 import com.example.givy.domain.user.dto.req.UserReqDTO;
-import com.example.givy.domain.user.dto.req.UserSecuritiesReqDTO;
 import com.example.givy.domain.user.dto.res.UserResDTO;
-import com.example.givy.domain.user.dto.res.UserSecuritiesResDTO;
-import com.example.givy.domain.user.entity.UserSecuritiesAccount;
 import com.example.givy.domain.user.entity.Users;
 import com.example.givy.domain.user.exception.UserException;
 import com.example.givy.domain.user.repository.UserRepository;
-import com.example.givy.domain.user.repository.UserSecuritiesRepository;
 import com.example.givy.global.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +21,6 @@ public class UserCommandServiceImpl implements UserCommandService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
-    private final UserSecuritiesRepository userSecuritiesRepository;
 
     /* 01-01 회원가입 API */
     @Override
@@ -75,24 +66,5 @@ public class UserCommandServiceImpl implements UserCommandService {
 
         // db 저장 끝.
         userRepository.save(user);
-    }
-
-    /* 06-01 증권 계좌 등록 */
-    @Override
-    public UserSecuritiesResDTO.UserSecuritiesListDTO registerSecurities(Long userId, UserSecuritiesReqDTO.RegisterSecuritiesDTO dto) {
-        Users user = userRepository.findById(userId).orElseThrow(() -> new UserException(UserErrorCode.USER_ID_NOT_FOUND));
-
-        List<UserSecuritiesAccount> newSecurities = dto.getSecuritiesList().stream() // DTO 내부 리스트 이름에 맞춰 수정
-                .filter(security -> !userSecuritiesRepository.existsByUsers_UserIdAndSecuritiesName(userId, security))
-                .map(security -> UserConverter.toUserSecuritiesEntity(user, security))
-                .toList();
-
-        if (newSecurities.isEmpty()) {
-            return UserConverter.toUserSecuritiesListDTO(Collections.emptyList());
-        }
-
-        List<UserSecuritiesAccount> saved = userSecuritiesRepository.saveAll(newSecurities);
-
-        return UserConverter.toUserSecuritiesListDTO(saved);
     }
 }

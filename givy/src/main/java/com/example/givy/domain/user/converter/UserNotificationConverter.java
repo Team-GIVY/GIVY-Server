@@ -1,7 +1,10 @@
 package com.example.givy.domain.user.converter;
 
+import com.example.givy.domain.notification.entity.Notification;
 import com.example.givy.domain.user.dto.res.UserNotificationResDTO;
+import com.example.givy.domain.user.entity.UserDeviceToken;
 import com.example.givy.domain.user.entity.UserNotification;
+import com.example.givy.domain.user.entity.Users;
 import org.springframework.data.domain.Page;
 
 public class UserNotificationConverter {
@@ -43,4 +46,12 @@ public class UserNotificationConverter {
                 .build();
     }
 
+    //dto -> entity
+    public static UserNotification toEntity(Notification notification, Users user, UserDeviceToken userDeviceToken){
+        return UserNotification.builder()
+                .notification(notification)
+                .users(user)
+                .userDeviceToken(userDeviceToken)
+                .build();
+    }
 }

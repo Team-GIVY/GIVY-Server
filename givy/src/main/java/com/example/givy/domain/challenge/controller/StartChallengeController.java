@@ -9,7 +9,7 @@ import com.example.givy.domain.user.code.UserSuccessCode;
 import com.example.givy.domain.user.dto.req.UserSecuritiesReqDTO;
 import com.example.givy.domain.user.dto.res.UserResDTO;
 import com.example.givy.domain.user.dto.res.UserSecuritiesResDTO;
-import com.example.givy.domain.user.service.command.UserCommandService;
+import com.example.givy.domain.user.service.command.securities.UserSecuritiesAccountCommandService;
 import com.example.givy.domain.user.service.query.UserQueryService;
 import com.example.givy.global.apiPayLoad.ApiResponse;
 import com.example.givy.global.security.CustomPrincipal;
@@ -25,7 +25,7 @@ import java.util.List;
 @RequestMapping("/start-challenge")
 public class StartChallengeController implements StartChallengeControllerDocs {
 
-    private final UserCommandService userCommandService;
+    private final UserSecuritiesAccountCommandService userSecuritiesAccountService;
     private final UserQueryService userQueryService;
     private final StartChallengeCommandService startChallengeCommandService;
     private final StartChallengeQueryService startChallengeQueryService;
@@ -33,10 +33,12 @@ public class StartChallengeController implements StartChallengeControllerDocs {
     /* 06-01 증권 계좌 등록 */
     @PostMapping("/setup/securities")
     public ApiResponse<UserSecuritiesResDTO.UserSecuritiesListDTO> registerSecurities(
+
+
             @AuthenticationPrincipal CustomPrincipal principal,
             @RequestBody @Valid UserSecuritiesReqDTO.RegisterSecuritiesDTO dto
     ) {
-        UserSecuritiesResDTO.UserSecuritiesListDTO securities = userCommandService.registerSecurities(principal.getUserId(), dto);
+        UserSecuritiesResDTO.UserSecuritiesListDTO securities = userSecuritiesAccountService.registerSecurities(principal.getUserId(), dto);
 
         //요청된 계좌 모두가 이미 등록된 경우
         if(securities.getSecuritiesList().isEmpty()){

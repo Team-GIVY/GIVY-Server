@@ -1,5 +1,6 @@
 package com.example.givy.domain.commerce.entity;
 
+import com.example.givy.domain.commerce.enums.MarketCode;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -29,8 +30,9 @@ public class MarketHoliday {
     private String name;
 
     //ex. 한국, 미국
+    @Enumerated(EnumType.STRING)
     @Column(name="market_code", nullable = false)
-    private String marketCode;
+    private MarketCode marketCode;
 
     @Column(name="created_at", updatable = false)
     @CreatedDate

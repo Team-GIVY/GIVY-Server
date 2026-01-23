@@ -2,7 +2,7 @@ package com.example.givy.domain.user.controller;
 
 import com.example.givy.domain.user.code.UserNotificationSuccessCode;
 import com.example.givy.domain.user.dto.res.UserNotificationResDTO;
-import com.example.givy.domain.user.service.command.UserNotificationCommandService;
+import com.example.givy.domain.user.service.command.notification.UserNotificationCommandService;
 import com.example.givy.domain.user.service.query.UserNotificationQueryService;
 import com.example.givy.global.apiPayLoad.ApiResponse;
 import com.example.givy.global.security.CustomPrincipal;

@@ -27,6 +27,5 @@ public interface UserNotificationRepository extends JpaRepository<UserNotificati
             @Param("isRead") Boolean isRead,
             Pageable pageable
     );
-
     Optional<UserNotification> findByUserNotificationId(Long userNotificationId);
 }

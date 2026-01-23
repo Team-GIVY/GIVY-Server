@@ -59,3 +59,6 @@ application-secrets.yml
 .DS_Store
 Thumbs.db
 .history/
+
+# Firebase Admin SDK private key
+**/resources/firebase/givy-firebase.json

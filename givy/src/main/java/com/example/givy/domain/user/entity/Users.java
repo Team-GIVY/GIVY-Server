@@ -97,6 +97,9 @@ public class Users extends BaseEntity {
     @OneToMany(mappedBy = "users")
     private List<UserSecuritiesAccount> userSecuritiesAccount = new ArrayList<>();
 
+    @OneToMany(mappedBy = "users")
+    private List<UserDeviceToken> userDeviceTokens = new ArrayList<>();
+
     // 01-04번 API - 프로필 완성을 위한 메서드
     public void completeSocialProfile(UserReqDTO.UserProfileDTO dto) {
         this.name = dto.getName();
@@ -130,6 +133,4 @@ public class Users extends BaseEntity {
     public void withdraw(LocalDateTime now) {
         this.deletedAt = now;
     }
-
-
 }
