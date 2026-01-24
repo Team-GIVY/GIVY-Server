@@ -45,6 +45,7 @@ out/
 .env.prod
 kis_token.json
 application-prod.yml
+application-local.yml
 application-secrets.yml
 *-secrets.yml
 
