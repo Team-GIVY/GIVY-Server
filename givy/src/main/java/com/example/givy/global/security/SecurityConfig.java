@@ -64,6 +64,10 @@ public class SecurityConfig {
 
                         // OAuth Redirect 허용
                         .requestMatchers("/oauth/**").permitAll()
+                        
+                        // 테스트용 KIS 스케줄러 수동 실행 (개발 환경용)
+                        .requestMatchers("/test/kis/**").permitAll()
+                        
                         // 그 외 모든 요청은 인증 필요
                         .anyRequest().authenticated()
                 );
