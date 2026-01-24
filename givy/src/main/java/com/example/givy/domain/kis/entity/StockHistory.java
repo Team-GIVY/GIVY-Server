@@ -34,7 +34,7 @@ public class StockHistory extends BaseEntity { // 일별시세정보를 저장�
     @Column(name = "close_price", nullable = false)
     private Long closePrice; // 종가
 
-    // 데이터 갱신을 위한 편의 메서드 (혹시 수정이 필요할 경우)
+    // 데이터 갱신을 위한 편의 메서드
     public void updatePrice(Long closePrice) {
         this.closePrice = closePrice;
     }

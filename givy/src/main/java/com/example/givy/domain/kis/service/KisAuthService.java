@@ -124,7 +124,7 @@ public class KisAuthService {
             if (expiration.isAfter(LocalDateTime.now())) {
                 this.accessToken = tokenData.accessToken;
                 this.tokenExpirationTime = expiration;
-                log.info("📂 파일에서 유효한 토큰 로드 완료 (만료: {})", expiration);
+                log.info("파일에서 유효한 토큰 로드 완료 (만료: {})", expiration);
                 return true; // 로드 성공
             } else {
                 log.info("파일에 저장된 토큰이 만료되었습니다.");

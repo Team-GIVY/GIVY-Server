@@ -36,7 +36,9 @@ public class KisStockScheduler {
     );
 
     // 매일 오후 4시 0분 0초에 실행 (장 마감 후)
-    @Scheduled(cron = "0 0 16 * * *")
+    // 개발 중: 주석 처리하여 수동 실행만 사용 (POST /test/kis/trigger-scheduler)
+    // 프로덕션 배포 시: 주석 해제하여 자동 실행 활성화
+    // @Scheduled(cron = "0 0 16 * * *")
     @Transactional // 전체 메서드에도 트랜잭션 적용 (deleteByBaseDate 호출 때문)
     public void updateStockInfo() {
         LocalDate today = LocalDate.now();
