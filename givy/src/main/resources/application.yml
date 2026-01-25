@@ -23,7 +23,6 @@ oauth:
     user-info-uri: https://kapi.kakao.com/v2/user/me
     client-secret: ${CLIENT_SECRET}
 
-
 fcm:
   file_path: ${FCM_FILE_PATH}
   url: https://fcm.googleapis.com/v1/projects/${PROJECT_ID}/messages:send
