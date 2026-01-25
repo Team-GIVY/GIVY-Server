@@ -54,7 +54,7 @@ public class SecurityConfig {
         //4. URL 인가 규칙 설정
         http.authorizeHttpRequests(auth -> auth
                         // 회원가입 / 로그인 허용
-                        .requestMatchers("/auth/signup", "/auth/login").permitAll()
+                        .requestMatchers("/auth/signup", "/auth/login","/auth/refresh").permitAll()
 
                         // 정적 파일 허용
                         .requestMatchers("/", "/index.html", "/css/**", "/js/**", "/images/**").permitAll()
@@ -64,6 +64,10 @@ public class SecurityConfig {
 
                         // OAuth Redirect 허용
                         .requestMatchers("/oauth/**").permitAll()
+                        
+                        // 테스트용 KIS 스케줄러 수동 실행 (개발 환경용)
+                        .requestMatchers("/test/kis/**").permitAll()
+                        
                         // 그 외 모든 요청은 인증 필요
                         .anyRequest().authenticated()
                 );

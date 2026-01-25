@@ -14,6 +14,13 @@ public enum GeneralErrorCode implements BaseErrorCode{
     FORBIDDEN(HttpStatus.FORBIDDEN, "AUTH403_1", "요청이 거부되었습니다."),
     NOT_FOUND(HttpStatus.NOT_FOUND, "COMMON404_1", "요청한 리소스를 찾을 수 없습니다."),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "COMMON500_1", "예기치 않은 서버 오류입니다."),
+    EXPIRED_OR_REVOKED_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "AUTH401_2", "Refresh Token이 만료되었거나 더 이상 유효하지 않습니다."),
+
+    TOKEN_HASH_FAILED(
+            HttpStatus.INTERNAL_SERVER_ERROR,
+            "AUTH500_1",
+            "인증 토큰 처리 중 서버 내부 오류가 발생했습니다."
+    ),
 
     // [요청 본문 - DTO 검증 실패]
     REQUEST_BODY_VALIDATION_FAILED(HttpStatus.BAD_REQUEST, "REQ400", "요청 본문(Request Body)의 유효성 검증에 실패했습니다."),

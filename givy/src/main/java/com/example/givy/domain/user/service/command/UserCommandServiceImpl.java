@@ -7,6 +7,8 @@ import com.example.givy.domain.user.dto.res.UserResDTO;
 import com.example.givy.domain.user.entity.Users;
 import com.example.givy.domain.user.exception.UserException;
 import com.example.givy.domain.user.repository.UserRepository;
+import com.example.givy.global.auth.entity.RefreshToken;
+import com.example.givy.global.auth.service.RefreshTokenProvider;
 import com.example.givy.global.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,6 +23,7 @@ public class UserCommandServiceImpl implements UserCommandService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final RefreshTokenProvider refreshTokenProvider;
 
     /* 01-01 회원가입 API */
     @Override
@@ -49,9 +52,11 @@ public class UserCommandServiceImpl implements UserCommandService {
             throw new UserException(UserErrorCode.USER_INVALID_PASSWORD);
         }
 
-        String token = jwtTokenProvider.createToken(user.getUserId(), user.getRole());
+        String accessToken = jwtTokenProvider.createToken(user.getUserId(), user.getRole());
 
-        return UserConverter.toLoginDTO(token, user);
+        String refreshToken = refreshTokenProvider.createAndSave(user.getUserId());
+
+        return UserConverter.toLoginDTO(accessToken, refreshToken, user);
     }
 
 
@@ -65,7 +70,47 @@ public class UserCommandServiceImpl implements UserCommandService {
         //이미 생성된 entity를 userId기준으로 찾았음.
         user.completeSocialProfile(dto);
 
-        // db 저장 끝.
         userRepository.save(user);
     }
+
+    /* 01-06 로그아웃 API */
+    @Override
+    public void logout(Long userId, String refreshToken) {
+
+        // 1refresh token 자체 검증 (존재 + 만료/폐기 여부)
+        RefreshToken token = refreshTokenProvider.validate(refreshToken);
+
+        if (!token.getUserId().equals(userId)) {
+            throw new UserException(UserErrorCode.USER_INVALID_REFRESH_TOKEN_OWNER);
+        }
+
+        // 해당 유저 refreshToken 로그아웃시키기
+        refreshTokenProvider.revoke(token);
+    }
+
+    /* 01-07 토큰 재발급 API */
+    @Override
+    public UserResDTO.UserTokenRefreshResDTO refresh(String rawRefreshToken) {
+
+        RefreshToken token = refreshTokenProvider.validate(rawRefreshToken);
+
+        Long userId = token.getUserId();
+
+        Users user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserException(UserErrorCode.USER_ID_NOT_FOUND));
+
+        String newAccessToken = jwtTokenProvider.createToken(user.getUserId(), user.getRole());
+
+        String newRefreshToken = refreshTokenProvider.createAndSave(userId);
+
+        //기존 refresh token 폐기. - 추후 RefreshTokenProvider.validate() 여기서 만료 검증됨.
+        refreshTokenProvider.revoke(token);
+
+        return UserResDTO.UserTokenRefreshResDTO.builder()
+                .accessToken(newAccessToken)
+                .refreshToken(newRefreshToken)
+                .build();
+    }
+
+
 }
