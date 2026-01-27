@@ -68,45 +68,41 @@ public class Users extends BaseEntity {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
-    @Column(name = "securities_name")
-    private String securitiesName;
-
-    @Column(name = "is_securities_connected", nullable = false)
-    @Builder.Default
-    private Boolean isSecuritiesConnected = false;
-
-    @Column(name = "connected_at")
-    private LocalDateTime connectedAt;
-
     //erd 추가
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false, length = 20)
     private Role role;
-    
+
+    @Column(name="birth", nullable = false)
+    private LocalDate birth;
+
     //mapping
     @OneToMany(mappedBy = "users")
     private List<UserAsset> assets = new ArrayList<>();
-    
+
     @OneToMany(mappedBy = "users")
     private List<Tendency> tendency = new ArrayList<>();
 
-    @OneToMany(mappedBy="users")
+    @OneToMany(mappedBy = "users")
     private List<UserNotification> userNotification = new ArrayList<>();
 
-    @OneToMany(mappedBy="users")
+    @OneToMany(mappedBy = "users")
     private List<UserStamp> userStamp = new ArrayList<>();
 
-    @OneToMany(mappedBy="users")
+    @OneToMany(mappedBy = "users")
     private List<BuyHistory> buyHistory = new ArrayList<>();
 
-    @OneToMany(mappedBy="users")
+    @OneToMany(mappedBy = "users")
     private List<GuideLike> guideLike = new ArrayList<>();
 
-    @OneToMany(mappedBy="users")
+    @OneToMany(mappedBy = "users")
     private List<GuideStore> guideStore = new ArrayList<>();
 
     @OneToMany(mappedBy = "users")
     private List<UserSecuritiesAccount> userSecuritiesAccount = new ArrayList<>();
+
+    @OneToMany(mappedBy = "users")
+    private List<UserDeviceToken> userDeviceTokens = new ArrayList<>();
 
     // 01-04번 API - 프로필 완성을 위한 메서드
     public void completeSocialProfile(UserReqDTO.UserProfileDTO dto) {
@@ -144,6 +140,4 @@ public class Users extends BaseEntity {
     public void withdraw(LocalDateTime now) {
         this.deletedAt = now;
     }
-
-
 }

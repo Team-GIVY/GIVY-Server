@@ -59,7 +59,6 @@ public class UserCommandServiceImpl implements UserCommandService {
         return UserConverter.toLoginDTO(accessToken, refreshToken, user);
     }
 
-
     /* 01-04 소셜 회원가입(프로필 완성 단계) */
     @Override
     public void socialSignup(Long userId, UserReqDTO.UserProfileDTO dto){

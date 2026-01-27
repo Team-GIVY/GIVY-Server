@@ -6,6 +6,7 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -26,11 +27,12 @@ public class UserNotification {
     private Boolean isRead = false;
 
     @Column(name="delivered_at", nullable = false)
+    @CreatedDate
     private LocalDateTime deliveredAt;
 
     @Column(name="created_at", nullable = false)
     @CreatedDate
-    private LocalDateTime createdAt;
+    private LocalDate createdAt;
 
     //mapping
     @ManyToOne
@@ -40,4 +42,12 @@ public class UserNotification {
     @ManyToOne
     @JoinColumn(name="user_id")
     private Users users;
+
+    @ManyToOne
+    @JoinColumn(name="user_device_token_id")
+    private UserDeviceToken userDeviceToken;
+
+    public void readNotification(){
+        this.isRead = true;
+    }
 }

@@ -4,5 +4,6 @@ public enum NotificationType {
     CHALLENGE,
     GUIDE,
     AD,
-    SYSTEM
+    SYSTEM,
+    MARKET_OPEN
 }

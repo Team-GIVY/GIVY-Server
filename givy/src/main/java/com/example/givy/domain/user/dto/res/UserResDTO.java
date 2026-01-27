@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -95,6 +96,12 @@ public class UserResDTO {
         private LocalDateTime connectedAt;
     }
 
-
+    @Getter
+    @Builder
+    public static class AgeVerificationResDTO{
+        private Long userId;
+        private LocalDate birth;
+        private boolean isAdult;
+    }
 
 }

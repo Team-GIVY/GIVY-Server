@@ -30,6 +30,14 @@ oauth:
     user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
     authorize-uri: https://accounts.google.com/o/oauth2/v2/auth
 
+#푸시알림
+fcm:
+  file_path: ${FCM_FILE_PATH}
+  url: https://fcm.googleapis.com/v1/projects/${PROJECT_ID}/messages:send
+  google_api: https://www.googleapis.com/auth/cloud-platform
+  project_id: ${PROJECT_ID}
+  
+
 #한국 투자 증권 API
 kis:
   api:
