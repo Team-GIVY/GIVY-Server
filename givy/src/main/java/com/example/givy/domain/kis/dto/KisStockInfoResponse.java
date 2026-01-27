@@ -20,10 +20,10 @@ public class KisStockInfoResponse {
     @ToString
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Output {
-        @JsonProperty("stck_hgpr")
+        @JsonProperty("w52_hgpr")
         private String highestPrice52w; // 52주 최고가
 
-        @JsonProperty("stck_lwpr")
+        @JsonProperty("w52_lwpr")
         private String lowestPrice52w; // 52주 최저가
 
         @JsonProperty("hts_kor_isnm")
