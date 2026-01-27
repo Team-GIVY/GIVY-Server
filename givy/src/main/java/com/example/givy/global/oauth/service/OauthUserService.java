@@ -8,12 +8,16 @@ package com.example.givy.global.oauth.service;
 import com.example.givy.domain.user.entity.Users;
 import com.example.givy.domain.user.enums.Language;
 import com.example.givy.domain.user.enums.Role;
+import com.example.givy.domain.user.enums.SocialType;
 import com.example.givy.domain.user.repository.UserRepository;
+import com.example.givy.global.oauth.model.GoogleUserInfo;
 import com.example.givy.global.oauth.model.KakaoUserInfo;
 import com.example.givy.global.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -23,19 +27,40 @@ public class OauthUserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public String handleKakaoUser(KakaoUserInfo info){
+    public Users handleKakaoUser(KakaoUserInfo info) {
 
-        // 이메일 기준으로 유저 조회
-        Users user = userRepository.findByEmail(info.getEmail())
+        return userRepository.findByEmail(info.getEmail())
                 .orElseGet(() -> createKakaoUser(info));
-
-        // JWT 발급
-        return jwtTokenProvider.createToken(user.getUserId(), user.getRole());
     }
+
 
     private Users createKakaoUser(KakaoUserInfo info){
 
         String encodedPassword = passwordEncoder.encode("kakao_oauth_placeholder");
+
+        Users user = Users.builder()
+                .email(info.getEmail())
+                .password(encodedPassword)
+                .socialType(SocialType.KAKAO)
+                .name(info.getNickname())
+                .nickname("사용자")
+                .role(Role.USER)
+                .language(Language.KO)
+                .connectedAt(LocalDateTime.now())
+                .build();
+
+        return userRepository.save(user);
+    }
+
+    public String handleGoogleUser(GoogleUserInfo info){
+        Users user = userRepository.findByEmail(info.getEmail())
+                .orElseGet(() -> createGoogleUser(info));
+
+        return jwtTokenProvider.createToken(user.getUserId(), user.getRole());
+    }
+
+    private Users createGoogleUser(GoogleUserInfo info){
+        String encodedPassword = passwordEncoder.encode("google_oauth_placeholder");
 
         Users user = Users.builder()
                 .email(info.getEmail())

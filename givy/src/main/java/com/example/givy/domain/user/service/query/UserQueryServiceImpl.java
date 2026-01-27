@@ -21,12 +21,12 @@ public class UserQueryServiceImpl implements UserQueryService {
 
     /* 01-05 내 정보 조회 API */
     @Override
-    public UserResDTO.UserDetailDTO getUserInfo(Long userId) {
+    public UserResDTO.UserMyPageDTO getUserInfo(Long userId) {
 
         Users user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserException(UserErrorCode.USER_ID_NOT_FOUND));
 
-        return UserConverter.toDetailDTO(user);
+        return UserConverter.toMyPageDTO(user);
 
     }
 

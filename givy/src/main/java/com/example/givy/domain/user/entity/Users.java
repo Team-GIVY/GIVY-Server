@@ -8,6 +8,7 @@ import com.example.givy.domain.user.enums.Language;
 import com.example.givy.domain.user.enums.Role;
 import com.example.givy.domain.user.enums.SocialType;
 import com.example.givy.global.common.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -46,6 +47,9 @@ public class Users extends BaseEntity {
 
     @Column(name = "password")
     private String password;
+
+    @Column(name ="birth_date", nullable = false)
+    private LocalDate birthDate;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "social_type")
@@ -106,6 +110,9 @@ public class Users extends BaseEntity {
         this.nickname = dto.getNickname();
         this.language = dto.getLanguage();
         this.profileImageUrl = dto.getProfileImageUrl();
+        if (this.birthDate == null) {
+            this.birthDate = dto.getBirthDate();
+        }
     }
 
     /* 05-01 프로필 수정 */

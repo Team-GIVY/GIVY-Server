@@ -24,15 +24,15 @@ public class UserController implements UserControllerDocs {
     @PostMapping("/signup")
     public ApiResponse<UserResDTO.UserInfoDTO> SignUp(
             @RequestBody @Valid UserReqDTO.UserSignupDTO request
-    ){
+    ) {
         return ApiResponse.onSuccess(UserSuccessCode.USER_SIGNUP_CREATED, userCommandService.signup(request));
     }
 
     /* 01-02 로그인 API */
     @PostMapping("/login")
     public ApiResponse<UserResDTO.UserLoginResDTO> Login(
-        @RequestBody @Valid UserReqDTO.UserLoginDTO request
-    ){
+            @RequestBody @Valid UserReqDTO.UserLoginDTO request
+    ) {
         return ApiResponse.onSuccess(UserSuccessCode.USER_LOGIN_SUCCESS, userCommandService.login(request));
     }
 
@@ -42,7 +42,7 @@ public class UserController implements UserControllerDocs {
     public ApiResponse<?> SocialSignup(
             @AuthenticationPrincipal CustomPrincipal principal,
             @RequestBody @Valid UserReqDTO.UserProfileDTO request
-    ){
+    ) {
         userCommandService.socialSignup(principal.getUserId(), request);
         return ApiResponse.onSuccess(UserSuccessCode.USER_SOCIAL_SIGNUP_CREATED);
     }
@@ -50,11 +50,32 @@ public class UserController implements UserControllerDocs {
 
     /* 01-05 내 정보 조회 API */
     @GetMapping("/users/me")
-    public ApiResponse<UserResDTO.UserDetailDTO> getUserInfo(
+    public ApiResponse<UserResDTO.UserMyPageDTO> getUserInfo(
             @AuthenticationPrincipal CustomPrincipal principal
-    ){
-        UserResDTO.UserDetailDTO response = userQueryService.getUserInfo(principal.getUserId());
+    ) {
+        UserResDTO.UserMyPageDTO response = userQueryService.getUserInfo(principal.getUserId());
         return ApiResponse.onSuccess(UserSuccessCode.USER_FETCH_SUCCESS, response);
+    }
+
+    /* 01-06 로그아웃 API */
+    @PostMapping("/logout")
+    public ApiResponse<?> logout(
+            @AuthenticationPrincipal CustomPrincipal principal,
+            @RequestBody @Valid UserReqDTO.UserLogoutDTO request
+    ) {
+        userCommandService.logout(principal.getUserId(), request.getRefreshToken());
+        return ApiResponse.onSuccess(UserSuccessCode.USER_LOGOUT_SUCCESS);
+    }
+
+    /* 01-07 토큰 재발급 API */
+    @PostMapping("/refresh")
+    public ApiResponse<UserResDTO.UserTokenRefreshResDTO> refresh(
+            @RequestBody @Valid UserReqDTO.UserTokenRefreshDTO request
+    ) {
+        return ApiResponse.onSuccess(
+                UserSuccessCode.USER_TOKEN_REFRESH_SUCCESS,
+                userCommandService.refresh(request.getRefreshToken())
+        );
     }
 
 
