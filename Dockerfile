@@ -22,9 +22,15 @@ COPY src/ ./src/
 # 빌드 실행 (QueryDSL 생성 포함, 상세 로그)
 RUN ./gradlew clean bootJar --no-daemon --info --stacktrace
 
+# JAR 파일 생성 확인
+RUN ls -lh /app/build/libs/ || echo "JAR file not found!"
+
 # 실행 스테이지
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
+
+# wget 설치 (헬스체크용)
+RUN apk add --no-cache wget
 
 # 빌드된 JAR 파일 복사
 COPY --from=build /app/build/libs/givy-0.0.1-SNAPSHOT.jar app.jar
@@ -32,7 +38,7 @@ COPY --from=build /app/build/libs/givy-0.0.1-SNAPSHOT.jar app.jar
 # 8080 포트 개방
 EXPOSE 8080
 
-# 헬스체크 추가 (선택사항)
+# 헬스체크 추가
 HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
   CMD wget --no-verbose --tries=1 --spider http://localhost:8080/actuator/health || exit 1
 
