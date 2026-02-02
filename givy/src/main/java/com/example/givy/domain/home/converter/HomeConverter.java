@@ -5,6 +5,8 @@ import com.example.givy.domain.home.dto.res.HomeResDTO;
 import com.example.givy.domain.recommendation.entity.Tendency;
 import com.example.givy.domain.user.entity.Users;
 
+import java.util.List;
+
 public class HomeConverter {
 
     public static HomeResDTO.HomeResponseDTO toHomeResponseDTO(Users user, String status, Object data) {
@@ -26,9 +28,9 @@ public class HomeConverter {
                 .build();
     }
 
-    public static HomeResDTO.AfterHomeDTO toAfterHomeDTO(Users user, Product product, String securitiesAccount){
-        HomeResDTO.HomeTicketDTO ticket = toHomeTicketDTO(product,securitiesAccount);
-        HomeResDTO.HomeFrontCardDTO frontCard = toHomeFrontCardDTO(product);
+    public static HomeResDTO.AfterHomeDTO toAfterHomeDTO(Product product, String securitiesName, Double averageRate, int rateMin, int rateMax, List<Long> chartData){
+        HomeResDTO.HomeTicketDTO ticket = toHomeTicketDTO(product,securitiesName);
+        HomeResDTO.HomeFrontCardDTO frontCard = toHomeFrontCardDTO(product, averageRate, rateMin, rateMax, chartData);
         HomeResDTO.HomeBackCardDTO backCard = toHomeBackCardDTO(product);
         return HomeResDTO.AfterHomeDTO.builder()
                 .ticket(ticket)
@@ -47,14 +49,17 @@ public class HomeConverter {
                 .build();
     }
 
-    public static HomeResDTO.HomeFrontCardDTO toHomeFrontCardDTO(Product product){
+    public static HomeResDTO.HomeFrontCardDTO toHomeFrontCardDTO(Product product, Double averageRate, int rateMin, int rateMax, List<Long> chartData){
+        String title = product.getTicker() + "에 5만원 투자 중이에요";
+
         return HomeResDTO.HomeFrontCardDTO.builder()
                 .exchange(product.getExchange())
-                .ticker(product.getTicker())
+                .title(title)
                 .productName(product.getName())
-                .averageRate(product.getRateAvg())
-                .rateMax(product.getRateMax())
-                .rateMin(product.getRateMin())
+                .averageRate(averageRate)
+                .rateMax(rateMax)
+                .rateMin(rateMin)
+                .chartData(chartData)
                 .build();
     }
 

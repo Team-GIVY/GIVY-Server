@@ -2,6 +2,8 @@ package com.example.givy.domain.home.dto.res;
 
 import lombok.Builder;
 
+import java.util.List;
+
 public class HomeResDTO {
 
     // 전체 응답
@@ -42,11 +44,12 @@ public class HomeResDTO {
     @Builder
     public record HomeFrontCardDTO(
             String exchange,
-            String ticker,
+            String title,
             String productName,
             Double averageRate,
-            Double rateMin,
-            Double rateMax
+            Integer rateMin,
+            Integer rateMax,
+            List<Long> chartData
     ){}
 
     // 하단 뒷면

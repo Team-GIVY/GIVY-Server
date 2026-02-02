@@ -19,6 +19,7 @@ public class StartChallenge extends BaseEntity {
     @Column(name="start_challenge_id")
     private Long startChallengeId;
 
+    @Enumerated(EnumType.STRING)
     @Column(name="status")
     @Enumerated(EnumType.STRING)
     private Status status;
