@@ -10,14 +10,17 @@ COPY build.gradle settings.gradle ./
 # Gradle 실행 권한 부여
 RUN chmod +x ./gradlew
 
-# 의존성 다운로드 (소스 변경 없이 캐시 활용)
-RUN ./gradlew dependencies --no-daemon || true
+# Gradle 빌드 옵션 설정 (타임아웃 증가, 메모리 할당)
+ENV GRADLE_OPTS="-Dorg.gradle.daemon=false -Dorg.gradle.parallel=false -Dorg.gradle.configureondemand=false -Xmx2048m -Dfile.encoding=UTF-8"
+
+# 의존성 다운로드 (소스 변경 없이 캐시 활용, 타임아웃 증가)
+RUN ./gradlew dependencies --no-daemon --refresh-dependencies --info || true
 
 # 소스 코드 복사
 COPY src/ ./src/
 
-# 빌드 실행 (QueryDSL 생성 포함)
-RUN ./gradlew clean bootJar --no-daemon
+# 빌드 실행 (QueryDSL 생성 포함, 상세 로그)
+RUN ./gradlew clean bootJar --no-daemon --info --stacktrace
 
 # 실행 스테이지
 FROM eclipse-temurin:21-jre-alpine
