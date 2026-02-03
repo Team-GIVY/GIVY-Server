@@ -24,7 +24,7 @@ public class UserConverter {
                 .email(dto.getEmail())
                 .password(encodedPw)
                 .name(dto.getName())
-                .birthDate(dto.getBirthDate())
+                .birth(dto.getBirthDate()) // DTO의 birthDate를 엔티티의 birth에 매핑
                 .nickname(dto.getNickname())
                 .language(dto.getLanguage())
                 .role(Role.USER)

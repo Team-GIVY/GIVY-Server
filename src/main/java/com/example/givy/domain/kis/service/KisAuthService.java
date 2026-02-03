@@ -1,23 +1,21 @@
 package com.example.givy.domain.kis.service;
 
 import com.example.givy.domain.kis.dto.KisTokenResponse;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.example.givy.domain.kis.entity.KisToken;
+import com.example.givy.domain.kis.repository.KisTokenRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -29,17 +27,16 @@ public class KisAuthService {
     @Value("${kis.api.url}") private String baseUrl;
 
     private final WebClient webClient;
-    private final ObjectMapper objectMapper;
+    private final KisTokenRepository kisTokenRepository;
     private String accessToken; // 메모리 캐싱
     private LocalDateTime tokenExpirationTime; // 토큰 만료 시간
 
-    private static final String TOKEN_FILE_PATH = "kis_token.json"; // 토큰 저장 파일명
-
     // 서버 시작 시 및 6시간마다 토큰 갱신
     @Scheduled(fixedRate = 1000 * 60 * 60 * 6)
+    @Transactional
     public void refreshAccessToken() {
-        // 1. 파일에서 토큰 불러오기 시도 (유효하면 API 호출 스킵)
-        if (loadTokenFromFile()) {
+        // 1. DB에서 토큰 불러오기 시도 (유효하면 API 호출 스킵)
+        if (loadTokenFromDatabase()) {
             return;
         }
 
@@ -85,8 +82,8 @@ public class KisAuthService {
             this.tokenExpirationTime = LocalDateTime.now().plusSeconds(response.getExpiresIn() - 600);
             log.info("KIS 토큰 갱신 완료 (유효기간: {}초)", response.getExpiresIn());
             
-            // 파일에 저장
-            saveTokenToFile();
+            // DB에 저장
+            saveTokenToDatabase();
         } else {
             log.error("KIS 토큰 발급 실패함");
         }
@@ -99,42 +96,59 @@ public class KisAuthService {
         return accessToken;
     }
 
-    // --- 파일 캐싱 로직 ---
+    // --- DB 캐싱 로직 ---
 
-    private void saveTokenToFile() {
+    @Transactional
+    private void saveTokenToDatabase() {
         try {
-            TokenData tokenData = new TokenData(this.accessToken, this.tokenExpirationTime.toString());
-            File file = new File(TOKEN_FILE_PATH);
-            objectMapper.writeValue(file, tokenData);
-            log.info("KIS 토큰 파일 저장 완료: {}", file.getAbsolutePath());
-        } catch (IOException e) {
-            log.warn("토큰 파일 저장 실패: {}", e.getMessage());
+            // 기존 토큰 조회
+            KisToken existingToken = kisTokenRepository.findFirstByOrderByCreatedAtDesc()
+                    .orElse(null);
+
+            if (existingToken != null) {
+                // 기존 토큰 업데이트
+                existingToken.updateToken(this.accessToken, this.tokenExpirationTime);
+                kisTokenRepository.save(existingToken);
+                log.info("KIS 토큰 DB 업데이트 완료 (만료: {})", this.tokenExpirationTime);
+            } else {
+                // 새 토큰 생성
+                KisToken newToken = KisToken.create(this.accessToken, this.tokenExpirationTime);
+                kisTokenRepository.save(newToken);
+                log.info("KIS 토큰 DB 저장 완료 (만료: {})", this.tokenExpirationTime);
+            }
+
+            // 만료된 토큰 정리
+            kisTokenRepository.deleteExpiredTokens(LocalDateTime.now());
+        } catch (Exception e) {
+            log.warn("토큰 DB 저장 실패: {}", e.getMessage());
         }
     }
 
-    private boolean loadTokenFromFile() {
+    private boolean loadTokenFromDatabase() {
         try {
-            File file = new File(TOKEN_FILE_PATH);
-            if (!file.exists()) return false;
+            Optional<KisToken> tokenOpt = kisTokenRepository.findFirstByOrderByCreatedAtDesc();
+            
+            if (tokenOpt.isEmpty()) {
+                log.info("DB에 저장된 토큰이 없습니다.");
+                return false;
+            }
 
-            TokenData tokenData = objectMapper.readValue(file, TokenData.class);
-            LocalDateTime expiration = LocalDateTime.parse(tokenData.expirationTime);
+            KisToken token = tokenOpt.get();
 
-            // 토큰이 유효한지 확인 (현재 시간보다 미래인지)
-            if (expiration.isAfter(LocalDateTime.now())) {
-                this.accessToken = tokenData.accessToken;
-                this.tokenExpirationTime = expiration;
-                log.info("파일에서 유효한 토큰 로드 완료 (만료: {})", expiration);
+            // 토큰이 유효한지 확인
+            if (!token.isExpired()) {
+                this.accessToken = token.getAccessToken();
+                this.tokenExpirationTime = token.getExpiredAt();
+                log.info("DB에서 유효한 토큰 로드 완료 (만료: {})", token.getExpiredAt());
                 return true; // 로드 성공
             } else {
-                log.info("파일에 저장된 토큰이 만료되었습니다.");
+                log.info("DB에 저장된 토큰이 만료되었습니다.");
+                // 만료된 토큰 삭제
+                kisTokenRepository.delete(token);
             }
         } catch (Exception e) {
-            log.warn("토큰 파일 로드 실패 (새로 발급받습니다): {}", e.getMessage());
+            log.warn("토큰 DB 로드 실패 (새로 발급받습니다): {}", e.getMessage());
         }
         return false; // 로드 실패 또는 만료됨
     }
-
-    // JSON 저장용 내부 클래스
-    private record TokenData(String accessToken, String expirationTime) {}
 }

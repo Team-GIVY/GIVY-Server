@@ -48,9 +48,6 @@ public class Users extends BaseEntity {
     @Column(name = "password")
     private String password;
 
-    @Column(name ="birth_date", nullable = false)
-    private LocalDate birthDate;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "social_type")
     private SocialType socialType;
@@ -113,8 +110,8 @@ public class Users extends BaseEntity {
         this.nickname = dto.getNickname();
         this.language = dto.getLanguage();
         this.profileImageUrl = dto.getProfileImageUrl();
-        if (this.birthDate == null) {
-            this.birthDate = dto.getBirthDate();
+        if (this.birth == null) {
+            this.birth = dto.getBirthDate();
         }
     }
 
