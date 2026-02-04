@@ -4,6 +4,8 @@ import com.example.givy.domain.user.enums.Language;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -35,6 +37,11 @@ public class UserReqDTO {
         private String password;
 
         @NotNull
+        @Size(min = 2, max = 10, message = "2자에서 10자 사이의 이름을 입력해 주세요.")
+        @Pattern(
+                regexp = "^[a-zA-Z0-9가-힣]*$",
+                message = "이름에 특수 문자와 공백은 포함될 수 없습니다."
+        )
         private String name;
 
         @NotNull
@@ -54,6 +61,11 @@ public class UserReqDTO {
     public static class UserProfileDTO{
 
         @NotNull
+        @Size(min = 2, max = 10, message = "2자에서 10자 사이의 이름을 입력해 주세요.")
+        @Pattern(
+                regexp = "^[a-zA-Z0-9가-힣]*$",
+                message = "이름에 특수 문자와 공백은 포함될 수 없습니다."
+        )
         private String name;
 
         @NotNull
