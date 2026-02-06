@@ -1,0 +1,51 @@
+services:
+  givy-app:
+    build: .
+    container_name: givy-server
+    ports:
+      - "8080:8080"
+    environment:
+      # Spring Profile
+      SPRING_PROFILES_ACTIVE: prod
+      
+      # Database
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      
+      # JWT
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION_MS: ${JWT_EXPIRATION_MS}
+      
+      # OAuth
+      CLIENT_SECRET: ${CLIENT_SECRET}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      
+      # FCM
+      FCM_FILE_PATH: ${FCM_FILE_PATH}
+      PROJECT_ID: ${PROJECT_ID}
+      
+      # KIS API
+      KIS_API_APP_KEY: ${KIS_API_APP_KEY}
+      KIS_API_APP_SECRET: ${KIS_API_APP_SECRET}
+      KIS_API_URL: ${KIS_API_URL:-https://openapi.koreainvestment.com:9443}
+      
+      # JPA
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: "false"
+    env_file:
+      - .env
+    restart: always
+    networks:
+      - givy-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  givy-network:
+    driver: bridge
