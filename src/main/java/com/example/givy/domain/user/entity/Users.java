@@ -8,7 +8,6 @@ import com.example.givy.domain.user.enums.Language;
 import com.example.givy.domain.user.enums.Role;
 import com.example.givy.domain.user.enums.SocialType;
 import com.example.givy.global.common.BaseEntity;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
