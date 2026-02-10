@@ -31,7 +31,7 @@ public class SettingQueryServiceImpl implements SettingQueryService {
         boolean challengeEnabled = userNotificationSettingRepository
                 .findByUsers_UserIdAndNotificationType(
                         userId,
-                        NotificationType.CHALLENGE
+                        NotificationType.MARKET_OPEN
                 )
                 .map(UserNotificationSetting::getEnabled)
                 .orElse(true);
