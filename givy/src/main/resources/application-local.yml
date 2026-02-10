@@ -15,5 +15,5 @@ spring:
       ddl-auto: update
 
   jwt:
-    secret: ${JWT_SECRET:local_test_secret_key_1234567890}
-    expiration-ms: 3600000
+    secret: ${JWT_SECRET:local-jwt-secret-local-jwt-secret-local-jwt-secret}
+    expiration-ms: ${JWT_EXPIRATION_MS:3600000} # 1시간
