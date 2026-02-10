@@ -44,7 +44,7 @@ public class NotificationCommandServiceImpl implements NotificationCommandServic
         List<UserDeviceToken> targets = userDeviceRepository.findAllByEnabledNotification(NotificationType.MARKET_OPEN);
 
         if (targets.isEmpty()) {
-            log.info("발송 대상 유저가 존재하지 않아 알림 발송을 중단합니다. (Type: {})", NotificationType.CHALLENGE);
+            log.info("발송 대상 유저가 존재하지 않아 알림 발송을 중단합니다. (Type: {})", NotificationType.MARKET_OPEN);
             return;
         }
 

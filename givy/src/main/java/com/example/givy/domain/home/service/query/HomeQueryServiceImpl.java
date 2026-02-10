@@ -39,7 +39,7 @@ public class HomeQueryServiceImpl implements HomeQueryService{
 
         Tendency tendency = tendencyRepository.findByUsers(user).orElseThrow(() -> new TendencyException(TendencyErrorCode.TENDENCY_NOT_FOUND));
 
-        Optional<StartChallenge> challengeOpt = challengeRepository.findByUser(user);
+        Optional<StartChallenge> challengeOpt = challengeRepository.findByUsers(user);
 
         if (challengeOpt.isPresent()) {
 

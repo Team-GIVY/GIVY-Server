@@ -68,6 +68,9 @@ public class Users extends BaseEntity {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
+    @Column(name = "connected_at")
+    private LocalDateTime connectedAt;
+
     //erd 추가
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false, length = 20)

@@ -94,7 +94,7 @@ public class SettingCommandServiceImpl implements SettingCommandService {
 
         updateSingleNotificationSetting(
                 user,
-                NotificationType.CHALLENGE,
+                NotificationType.MARKET_OPEN,
                 request.getChallengeNotificationEnabled()
         );
     }
