@@ -50,14 +50,21 @@ public class HomeQueryServiceImpl implements HomeQueryService{
 
         Tendency tendency = tendencyRepository.findByUsers(user).orElseThrow(() -> new TendencyException(TendencyErrorCode.TENDENCY_NOT_FOUND));
 
-        Optional<StartChallenge> challengeOpt = challengeRepository.findByUsers(user);
+        // 진행 중인 챌린지를 우선 조회, 없으면 가장 최근 챌린지 조회
+        Optional<StartChallenge> challengeOpt = challengeRepository.findFirstByUsersAndStatusOrderByCreatedAtDesc(user, Status.IN_PROGRESS)
+                .or(() -> challengeRepository.findAllByUsers(user).stream()
+                        .sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()))
+                        .findFirst());
 
         if (challengeOpt.isPresent()) {
             StartChallenge challenge = challengeOpt.get();
             Product product = challenge.getProduct();
             String productCode = product.getCode();
 
-            String securitiesName = userSecuritiesAccountRepository.findByUsers(user).map(account -> account.getSecuritiesName()).orElseThrow(() -> new UserException(UserErrorCode.USER_SECURITIES_ACCOUNT_NOT_FOUND));
+            // 가장 최근 증권 계좌 조회
+            String securitiesName = userSecuritiesAccountRepository.findFirstByUsersOrderByCreatedAtDesc(user)
+                    .map(account -> account.getSecuritiesName())
+                    .orElseThrow(() -> new UserException(UserErrorCode.USER_SECURITIES_ACCOUNT_NOT_FOUND));
 
             Long currentPrice = 0L;
             Double high52wPrice = 0.0;
