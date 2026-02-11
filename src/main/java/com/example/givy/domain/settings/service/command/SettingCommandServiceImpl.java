@@ -4,6 +4,7 @@ import com.example.givy.domain.notification.entity.UserNotificationSetting;
 import com.example.givy.domain.notification.enums.NotificationType;
 import com.example.givy.domain.notification.repository.UserNotificationSettingRepository;
 import com.example.givy.domain.recommendation.entity.Tendency;
+import com.example.givy.domain.recommendation.repository.RecommendationEventRepository;
 import com.example.givy.domain.recommendation.repository.TendencyRepository;
 import com.example.givy.domain.settings.code.SettingErrorCode;
 import com.example.givy.domain.settings.dto.req.SettingReqDTO;
@@ -26,6 +27,7 @@ public class SettingCommandServiceImpl implements SettingCommandService {
 
     private final UserRepository userRepository;
     private final TendencyRepository tendencyRepository;
+    private final RecommendationEventRepository recommendationEventRepository;
     private final UserNotificationSettingRepository userNotificationSettingRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -73,6 +75,9 @@ public class SettingCommandServiceImpl implements SettingCommandService {
         Tendency tendency = tendencyRepository
                 .findTopByUsers_UserIdOrderByCreatedAtDesc(userId)
                 .orElseThrow(() -> new SettingException(SettingErrorCode.TENDENCY_NOT_FOUND));
+
+        // 외래 키 제약 조건을 해결하기 위해 관련 RecommendationEvent 먼저 삭제
+        recommendationEventRepository.deleteAllByTendency(tendency);
 
         tendencyRepository.delete(tendency);
     }
