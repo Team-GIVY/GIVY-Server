@@ -57,7 +57,7 @@ public class HomeQueryServiceImpl implements HomeQueryService{
             Product product = challenge.getProduct();
             String productCode = product.getCode();
 
-            String securitiesName = userSecuritiesAccountRepository.findByUsers(user).map(account -> account.getSecuritiesName()).orElseThrow(() -> new UserException(UserErrorCode.USER_SECURITIES_ACCOUNT_NOT_FOUND));
+            String securitiesName = userSecuritiesAccountRepository.findTopByUsersOrderByConnectedAtDescAccountIdDesc(user).map(account -> account.getSecuritiesName()).orElseThrow(() -> new UserException(UserErrorCode.USER_SECURITIES_ACCOUNT_NOT_FOUND));
 
             Long currentPrice = 0L;
             Double high52wPrice = 0.0;
