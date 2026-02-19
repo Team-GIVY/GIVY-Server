@@ -72,7 +72,7 @@ public class Users extends BaseEntity {
     @Column(name = "role", nullable = false, length = 20)
     private Role role;
 
-    @Column(name="birth", nullable = false)
+    @Column(name="birth")
     private LocalDate birth;
 
     //mapping

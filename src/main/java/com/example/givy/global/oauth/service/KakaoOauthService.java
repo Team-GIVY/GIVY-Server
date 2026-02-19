@@ -37,6 +37,7 @@ public class KakaoOauthService {
                 .queryParam("response_type", "code")
                 .queryParam("client_id", clientId)
                 .queryParam("redirect_uri", redirectUri)
+                .queryParam("scope", "account_email,profile_nickname")  // 이메일과 프로필 정보 요청
                 .build()
                 .toUriString();
     }
@@ -51,10 +52,21 @@ public class KakaoOauthService {
                 kakaoApiClient.requestUserInfo(token.getAccess_token());
 
         // (3) KakaoUserResponse DTO → 우리 내부 공통 모델 변환
+        // null 체크 추가: 사용자가 이메일 제공 동의를 하지 않았거나 프로필 정보가 없을 수 있음
+        String email = null;
+        String nickname = null;
+        
+        if (userResponse.getKakao_account() != null) {
+            email = userResponse.getKakao_account().getEmail();
+            if (userResponse.getKakao_account().getProfile() != null) {
+                nickname = userResponse.getKakao_account().getProfile().getNickname();
+            }
+        }
+        
         return KakaoUserInfo.builder()
                 .kakaoId(userResponse.getId())
-                .email(userResponse.getKakao_account().getEmail())
-                .nickname(userResponse.getKakao_account().getProfile().getNickname())
+                .email(email)
+                .nickname(nickname != null ? nickname : "카카오사용자")  // 닉네임이 없으면 기본값 사용
                 .build();
     }
 }

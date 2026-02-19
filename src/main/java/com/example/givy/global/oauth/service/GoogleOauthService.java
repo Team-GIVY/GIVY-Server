@@ -54,4 +54,18 @@ public class GoogleOauthService {
                 .profileImage(userResponse.getPicture())
                 .build();
     }
+
+    // ID Token으로 사용자 정보 추출
+    public GoogleUserInfo fetchGoogleUserFromIdToken(String idToken) {
+        // (1) ID Token 검증 및 사용자 정보 추출
+        var tokenInfo = googleApiClient.verifyIdToken(idToken);
+
+        // (2) GoogleIdTokenResponse → 우리 내부 공통 모델 변환
+        return GoogleUserInfo.builder()
+                .googleId(tokenInfo.getSub())
+                .email(tokenInfo.getEmail())
+                .nickname(tokenInfo.getName())
+                .profileImage(tokenInfo.getPicture())
+                .build();
+    }
 }

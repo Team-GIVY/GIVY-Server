@@ -64,6 +64,7 @@ public class SecurityConfig {
 
                         // OAuth Redirect 허용
                         .requestMatchers("/oauth/**").permitAll()
+                        .requestMatchers("/oauth/google/**").permitAll()  // Google OAuth 명시적 허용
                         
                         // 테스트용 KIS 스케줄러 수동 실행 (개발 환경용)
                         .requestMatchers("/test/kis/**").permitAll()

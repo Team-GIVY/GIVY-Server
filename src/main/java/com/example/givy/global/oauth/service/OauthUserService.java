@@ -38,12 +38,15 @@ public class OauthUserService {
 
         String encodedPassword = passwordEncoder.encode("kakao_oauth_placeholder");
 
+        // 카카오 닉네임이 없으면 기본값 사용
+        String nickname = info.getNickname() != null ? info.getNickname() : "카카오사용자";
+
         Users user = Users.builder()
                 .email(info.getEmail())
                 .password(encodedPassword)
                 .socialType(SocialType.KAKAO)
-                .name(info.getNickname())
-                .nickname("사용자")
+                .name(nickname)  // name도 카카오 닉네임 사용
+                .nickname(nickname)  // 카카오 프로필의 nickname 사용
                 .role(Role.USER)
                 .language(Language.KO)
                 .connectedAt(LocalDateTime.now())
@@ -57,6 +60,12 @@ public class OauthUserService {
                 .orElseGet(() -> createGoogleUser(info));
 
         return jwtTokenProvider.createToken(user.getUserId(), user.getRole());
+    }
+
+    // Users 객체를 반환하는 메서드 (ID Token 로그인용)
+    public Users handleGoogleUserAndReturnUser(GoogleUserInfo info){
+        return userRepository.findByEmail(info.getEmail())
+                .orElseGet(() -> createGoogleUser(info));
     }
 
     private Users createGoogleUser(GoogleUserInfo info){

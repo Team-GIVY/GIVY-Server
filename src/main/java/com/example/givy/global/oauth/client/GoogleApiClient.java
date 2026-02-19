@@ -1,5 +1,6 @@
 package com.example.givy.global.oauth.client;
 
+import com.example.givy.global.oauth.dto.res.GoogleIdTokenResponse;
 import com.example.givy.global.oauth.dto.res.GoogleTokenResponse;
 import com.example.givy.global.oauth.dto.res.GoogleUserResponse;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Component
 @RequiredArgsConstructor
@@ -62,5 +64,27 @@ public class GoogleApiClient {
                 restTemplate.exchange(userInfoUri, HttpMethod.GET, request, GoogleUserResponse.class);
 
         return response.getBody();
+    }
+
+    // 3) ID Token 검증 및 사용자 정보 추출
+    public GoogleIdTokenResponse verifyIdToken(String idToken) {
+        String tokenInfoUri = "https://oauth2.googleapis.com/tokeninfo";
+        
+        String url = UriComponentsBuilder
+                .fromHttpUrl(tokenInfoUri)
+                .queryParam("id_token", idToken)
+                .toUriString();
+
+        ResponseEntity<GoogleIdTokenResponse> response =
+                restTemplate.getForEntity(url, GoogleIdTokenResponse.class);
+
+        GoogleIdTokenResponse tokenInfo = response.getBody();
+        
+        // 클라이언트 ID 검증
+        if (tokenInfo != null && !clientId.equals(tokenInfo.getAud())) {
+            throw new RuntimeException("Invalid ID token: client ID mismatch");
+        }
+
+        return tokenInfo;
     }
 }
