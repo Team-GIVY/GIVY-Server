@@ -68,6 +68,9 @@ public class SecurityConfig {
                         // 테스트용 KIS 스케줄러 수동 실행 (개발 환경용)
                         .requestMatchers("/test/kis/**").permitAll()
                         
+                        // Actuator Health Check 허용 (헬스체크용)
+                        .requestMatchers("/actuator/health").permitAll()
+                        
                         // 그 외 모든 요청은 인증 필요
                         .anyRequest().authenticated()
                 );

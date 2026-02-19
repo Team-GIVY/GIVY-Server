@@ -1,9 +1,8 @@
 package com.example.givy.domain.user.entity;
 
+import com.example.givy.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
@@ -12,9 +11,8 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EntityListeners(AuditingEntityListener.class)
 @Table(name="user_securities_account")
-public class UserSecuritiesAccount {
+public class UserSecuritiesAccount extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="account_id")
@@ -28,7 +26,6 @@ public class UserSecuritiesAccount {
     private Boolean isSecuritiesConnected = false;
 
     @Column(name="connected_at")
-    @CreatedDate
     private LocalDateTime connectedAt;
 
     //mapping
