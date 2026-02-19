@@ -5,11 +5,7 @@ package com.example.givy.global.oauth.controller;
 카카오 인증서버가 돌려준 code 받고 JWT 발급해주기.
  */
 
-import com.example.givy.domain.user.converter.UserConverter;
-import com.example.givy.domain.user.dto.res.UserResDTO;
 import com.example.givy.domain.user.entity.Users;
-import com.example.givy.global.apiPayLoad.ApiResponse;
-import com.example.givy.global.apiPayLoad.code.OauthSuccessCode;
 import com.example.givy.global.auth.service.RefreshTokenProvider;
 import com.example.givy.global.oauth.model.GoogleUserInfo;
 import com.example.givy.global.oauth.model.KakaoUserInfo;
@@ -50,9 +46,10 @@ public class OauthController {
      *    예) GET /oauth/kakao/callback?code=xxxx
      */
     @GetMapping("/kakao/callback")
-    public ApiResponse<UserResDTO.UserLoginResDTO> kakaoCallback(
-            @RequestParam("code") String code
-    ) {
+    public void kakaoCallback(
+            @RequestParam("code") String code,
+            HttpServletResponse response
+    ) throws IOException {
         // 1. 카카오 사용자 정보 조회
         KakaoUserInfo kakaoUser = kakaoOauthService.fetchKakaoUser(code);
 
@@ -66,10 +63,8 @@ public class OauthController {
         String refreshToken =
                 refreshTokenProvider.createAndSave(user.getUserId());
 
-        return ApiResponse.onSuccess(
-                OauthSuccessCode.KAKAO_LOGIN_SUCCESS,
-                UserConverter.toLoginDTO(accessToken, refreshToken, user)
-        );
+        // 4. 프론트엔드로 리다이렉트 (토큰을 URL 파라미터로 전달)
+        response.sendRedirect("https://legendary-meringue-d8b9ac.netlify.app/?token=" + accessToken);
     }
 
     @GetMapping("/google/login")
@@ -78,11 +73,15 @@ public class OauthController {
     }
 
     @GetMapping("/google/callback")
-    public ApiResponse<String> googleCallback(@RequestParam("code") String code) {
+    public void googleCallback(
+            @RequestParam("code") String code,
+            HttpServletResponse response
+    ) throws IOException {
         GoogleUserInfo googleUser = googleOauthService.fetchGoogleUser(code);
 
         String jwt = oauthUserService.handleGoogleUser(googleUser);
 
-        return ApiResponse.onSuccess(OauthSuccessCode.GOOGLE_LOGIN_SUCCESS, jwt);
+        // 프론트엔드로 리다이렉트 (토큰을 URL 파라미터로 전달)
+        response.sendRedirect("https://legendary-meringue-d8b9ac.netlify.app/?token=" + jwt);
     }
 }
